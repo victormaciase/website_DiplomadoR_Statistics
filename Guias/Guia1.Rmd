@@ -1,0 +1,110 @@
+---
+title: "Untitled"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(forcats)
+library(janitor)
+library(haven)
+```
+
+```{r}
+data(loan50, package = "openintro")
+```
+
+
+```{r}
+glimpse(loan50)
+```
+
+```{r}
+loan50 %>% pull(loan_purpose) %>% levels()
+```
+
+
+```{r}
+loan50 %>% count(loan_purpose, sort = TRUE)
+```
+
+
+```{r fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+loan50 %>% ggplot(aes(x = loan_purpose)) + 
+  geom_bar(fill = "#3fa3ab") + 
+  theme_classic()
+```
+
+```{r fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+loan50 %>% ggplot(aes(x = fct_infreq(loan_purpose))) + 
+  geom_bar(fill = "#3fa3ab") + 
+  theme_classic() +
+  coord_flip()
+```
+
+```{r fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+loan50 %>% ggplot(aes(x = fct_rev(fct_infreq(loan_purpose)))) + 
+  geom_bar(fill = "#3fa3ab") + 
+  theme_classic() +
+  coord_flip()
+```
+
+
+```{r}
+loan50 %>%
+  mutate(loan_purpose = fct_lump(loan_purpose, n = 5, other_level = "Extra")) %>%
+  count(loan_purpose, sort = TRUE)
+```
+
+```{r}
+loan50 %>% ggplot(aes(x = homeownership, y = loan_amount, colour = homeownership)) +
+  geom_jitter()
+```
+
+```{r}
+loan50 %>% 
+  mutate(homeownership = fct_reorder(homeownership, loan_amount)) %>%
+  ggplot(aes(x = homeownership, y = loan_amount, colour = homeownership)) +
+  geom_jitter()
+```
+
+```{r}
+mediana_ingreso <- loan50 %>% pull(total_income) %>% median()
+
+loan50 %>% mutate(sup_median = if_else(total_income >= mediana_ingreso, "Mayor a mediana", "Menor a mediana"),
+                  sup_median = factor(sup_median)) %>% 
+  tabyl(sup_median)
+
+
+```
+
+
+
+```{r}
+ene <- read_dta("sample5_NDE2021.dta", label = TRUE)
+```
+
+```{r}
+ene %>% tabyl(activ)
+```
+
+
+```{r}
+str(ene$activ)
+```
+
+```{r}
+ene <- ene %>% zap_label()
+str(ene$activ)
+```
+
+```{r}
+ene <- ene %>% zap_labels()
+str(ene$activ)
+```
