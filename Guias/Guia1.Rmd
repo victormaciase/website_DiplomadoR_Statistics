@@ -87,7 +87,7 @@ loan50 %>% mutate(sup_median = if_else(total_income >= mediana_ingreso, "Mayor a
 
 
 ```{r}
-ene <- read_dta("sample5_NDE2021.dta", label = TRUE)
+ene <- read_dta("sample5_NDE2021.dta")
 ```
 
 ```{r}
@@ -100,6 +100,16 @@ str(ene$activ)
 ```
 
 ```{r}
+ene1 <- ene %>% filter(!is.na(activ)) %>% mutate(activ = as_factor(activ))
+```
+
+```{r}
+ene1 %>% tabyl(activ)
+```
+
+
+
+```{r}
 ene <- ene %>% zap_label()
 str(ene$activ)
 ```
@@ -108,3 +118,7 @@ str(ene$activ)
 ene <- ene %>% zap_labels()
 str(ene$activ)
 ```
+
+
+
+

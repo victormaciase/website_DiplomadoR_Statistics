@@ -1,0 +1,122 @@
+---
+title: "Factores, variables y valores etiquetados"
+author: "Víctor Macías E."
+output:
+  tufte::tufte_html: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+## Factores
+
+Se usan para representar variables categóricas. También permiten mostrar un vector de strings en un orden que no sea alfabético.
+
+En R los factores están compuestos por los valores en los datos y por los `levels`, lo que debe considerarse cuando se crea un factor.
+
+El vector `mes` que se detalla a continuación es el siguiente:
+
+```{r}
+mes <- c("Marzo", "Abril", "Febrero", "Marzo", "Marzo", "Enero", "Abril")
+```
+
+El tipo de este vector es `r typeof(mes)` y cuando se ordenan sus valores se muestran en orden alfabético, lo que no refleja el orden temporal de los meses del año.
+
+```{r}
+sort(mes)
+```
+
+En este caso será útil convertir el vector `mes` a factor, lo que requiere especificar los `levels`.
+
+```{r}
+mes_level <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+               "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+```
+
+Para crear un factor, escriba:
+
+```{r}
+mes_factor <- factor(mes, levels = mes_level)
+```
+
+```{r}
+mes_factor
+```
+
+Ahora cuando se ordena `mes_factor` los meses del año aparecen ordenados de acuerdo a cómo se especificó en `levels`.
+
+```{r}
+sort(mes_factor)
+```
+
+Uno de los paquetes que será de gran ayuda al trabajar con factores es `forcats`. Para mayor información se recomienda revisar:
+
+<https://cran.r-project.org/web/packages/forcats/forcats.pdf>
+
+Todas las funciones incluidas en este paquete comienzan con `fct_`. Entre las funciones más utilizadas de este paquete se encuentran:
+
+Función | Descripción 
+---- |-------
+fct_reorder() | reordena un factor por otra variable
+fct_recode()  | cambia los valores de los niveles
+fct_infreq()  | reordena un factor por la frecuencia de sus valores
+fct_relevel() | cambia manualmente el orden de un factor
+fct_lump()    | colapsa los valores menos/más frecuentes de un factor en la categoría "other"
+fct_rev()     | dfdgdh
+
+
+
+## Variables y valores etiquetados
+
+```{r}
+library(dplyr)
+library(haven)
+```
+
+Muchos datos importados a R incluyen variables etiquetadas y también sus valores con una etiqueta. A continuación usaremos `labelled` y `as_factor` del paquete `haven` para trabajar con datos etiquetados y factores en el siguiente ejemplo. La variable `sexo` está etiquetada como *"Sexo de la persona"* y los valores que toma están etiquetados como: `1 = Mujer, 2 = Hombre`
+
+```{r}
+sexo <- labelled(
+  c(2, 1, 1, 2, 2), 
+  labels = c(Mujer = 1, Hombre = 2),
+  label = "Sexo de la persona"
+)
+edad <- c(21, 32, 28, 45, 24)
+
+tb <- tibble::tibble(sexo, edad)
+tb
+```
+
+Note que la variable `sexo` tiene un formato `dbl+lbl`, esto es, es númerica pero está etiquetada, lo que también se puede ver a continuación: 
+
+```{r}
+str(tb)
+```
+
+Al construir una tabla de frecuencias de la variable `sexo` no se muestran las etiquetas de los valores, sino sólo los valores numéricos:
+
+```{r}
+tb %>% janitor::tabyl(sexo)
+```
+
+A continuación la variable `sexo` se convertirá en factor usando `as_factor(sexo)` que usará como `levels` a los `labels` especificados anteriormente.
+
+```{r}
+tb <- tb %>% mutate(sexo = as_factor(sexo))
+tb
+```
+
+```{r}
+str(tb)
+```
+
+Ahora la tabla de frecuencias de la variable `sexo` muestra como valores las etiquetas de los valores que ahora son los `levels` del factor:
+
+```{r}
+tb %>% janitor::tabyl(sexo)
+```
+
+
+
