@@ -1,0 +1,90 @@
+---
+title: "Mapas"
+author: "Víctor Macías E."
+output:
+  tufte::tufte_html: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+# Mapas coropléticos 
+
+Este tipo de mapas representa areas geográficas coloreadas en relación a una variable numérica. Permite visualizar cómo los valores de una variable se distribuyen en el territorio.
+
+Entre los paquetes que existen para leer datos geográficos y construir mapas, se encuentran: **_rgdal_**, **_sp_**, **_ggmap_**, **_tmap_**, **_rworldmap_**, **chilemapas** y **_leaflet_**. A continuación se presentan algunos recursos para el aprendizaje:
+
+## **leaflet**
+
+- <https://cran.r-project.org/web/packages/leaflet/leaflet.pdf>
+- <https://rstudio.github.io/leaflet/>
+
+El paquete *leaflet* permite acceso a más de 100 fuentes de mapas. Por defecto, se usa *OpenStreetMap*. Si se quiere acceder a otros tipos de mapas, revisarlos escribiendo `names(providers)`.
+
+```{r message=FALSE}
+library(leaflet)
+library(dplyr)
+```
+
+```{r}
+# Ejercicio 1: Creando mapa mundial
+
+leaflet() %>% addTiles()
+```
+
+```{r}
+# Ejercicio 2: Creando mapa mundial (provider = "CartoDB")
+
+leaflet() %>% addProviderTiles(provider = "Stamen.Watercolor")
+```
+
+
+```{r}
+# Ejercicio 3: Mapeando Casas Centrales de la universidades de Chile y Católica
+
+data <- tibble(
+                loc = c("Universidad de Chile", "Universidad Católica"),
+                lon = c(-70.6509, -70.64), 
+                lat = c(-33.4445, -33.4418))
+
+leaflet() %>% addTiles() %>% 
+  setView(lng = -70.6509, lat = -33.4418, zoom = 15) %>%
+  addMarkers(lng = data$lon, lat = data$lat, popup = data$loc)
+```
+
+El paquete leaflet tiene tres funciones para trabajar con colores cuando la variable asociada es continua: `colorNumeric`, `colorBin` y `colorQuantile`, y una si la variable es categórica: `colorFactor`.
+
+### **maps**
+
+- <https://cran.r-project.org/web/packages/maps/maps.pdf>
+
+
+```{r }
+# Ejercicio 4: Creando mapa mundial
+
+library(maps)
+#library(mapproj)
+library(ggplot2)
+world_map <- map_data("world")
+
+world_map %>% ggplot(aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill="lightgray", colour = "white") +
+  coord_equal() + theme_void()
+
+```
+
+
+```{r }
+# Ejercicio 5: Mapeando países de América del Sur
+
+map_data("world") %>% 
+  filter(region %in% c("Argentina", "Bolivia", "Brazil", "Colombia", 
+                       "Chile", "Ecuador", "French Guiana", "Guyana",  
+                       "Paraguay", "Peru", "Uruguay", "Suriname", "Venezuela")) %>% 
+  ggplot(aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill="lightgray", colour = "white") +
+  coord_equal() +
+  theme_void()
+```

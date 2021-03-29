@@ -1,0 +1,327 @@
+---
+title: "Población y muestra"
+author: "Víctor Macías E."
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+library(dplyr)
+library(tibble)
+```
+
+
+
+class: middle
+
+.center[![description of the image](images/MarcoMuestral.jpg)]
+
+---
+
+class: middle
+
+# Población
+
+Una *población* incluye a todos los individuos u objetos de interés.
+
+# Muestra
+
+Una *muestra* es un subconjunto de la población.
+
+# Marco muestral
+Lista de todos los casos pertenecientes a la población objetivo de los cuales se extraerá la muestra. Por ejemplo, lista de números de teléfonos, listado de direcciones, etc.
+
+
+---
+
+class: middle
+
+# Subcobertura
+
+Denota una situación en que el marco muestral no cubre completamente la población objetivo. Por lo tanto, estas unidades (hogares, personas, empresas, etc.) nunca serán muestreados.
+
+# No respuesta
+
+Sucede cuando un miembro de la muestra no envía la información requerida.
+
+
+---
+
+class: middle
+
+# Aplicación: Encuestas de empleo
+
+Discuta los conceptos de población objetivo, marco muestral, muestra, subcobertura y no respuesta para la Encuesta Nacional de Empleo.
+
+---
+
+class: bottom, right
+
+# Existen varios métodos para obtener una muestra de una población: probabilísticos y no probabilísticos
+
+
+---
+
+class: middle
+
+# Muestreo probabilístico
+
+Cualquier unidad de la población tiene una probabilidad mayor a cero de ser seleccionada para la muestra y dicha probabilidad puede ser determinada.
+
+--
+
+# Muestreo no probabilístico
+
+Algunas unidades de la población tienen una probabilidad igual a cero de ser parte de la muestra, o bien, la probabilidad de ser seleccionada para constituir la muestra no puede ser determinada.  
+
+Este tipo de muestreo puede crear una muestra que no es representativa de la población.
+
+
+---
+
+class: middle
+
+# Muestreo probabilístico
+
+Algunos tipos de muestreo probabilístico son:
+
+- Muestreo aleatorio simple
+- Muestreo estratificado
+- Muestreo por clusters
+- Muestreo multi-etápico
+
+---
+
+class: middle
+
+# Muestreo aleatorio simple
+En este tipo de muestreo, cada caso en la población tiene igual probabilidad de ser incluido en la muestra. Además, el conocimiento acerca de un caso incluido en la muestra no entrega información acerca de otros casos también incluidos.
+
+--
+
+<b>Muestreo aleatorio con reemplazo</b> cuando una unidad puede ser seleccionada nuevamente. 
+
+--
+
+<b>Muestreo aleatorio sin reemplazo</b> cuando una unidad no es elegible para ser seleccionada una segunda vez. En este caso, si la población es suficientemente grande en relación al tamaño muestral, la probabilidad de selección no cambia después de elegir unidades que ya no pueden ser seleccionadas. 
+
+---
+
+class: middle
+
+# Aplicación: Muestreo aleatorio simple
+
+```{r}
+letras <- tibble(var1 = LETTERS) 
+letras
+```
+
+
+
+```{r}
+set.seed(675)
+```
+
+
+
+```{r}
+tibble(var1 = LETTERS) %>% 
+  slice_sample(n = 8, replace  = TRUE) %>% pull() # con reemplazo
+```
+
+```{r}
+tibble(var1 = LETTERS) %>%
+  slice_sample(n = 8) %>% pull() # sin reemplazo
+```
+
+
+---
+
+class: middle
+
+# Muestreo sistemático
+
+se muestrea unidades de la población a intervalos regulares.
+
+```{r}
+letras_rand <- letras %>% 
+  slice_sample(prop = 1) %>% rowid_to_column()
+```
+
+```{r}
+n <- 8                 # tamaño muestra
+N <- letras_rand %>% nrow() # tamaño población
+intervalo <- N %/% n   # intervalo
+```
+
+```{r}
+row_index <- seq_len(n) * intervalo
+letras_rand %>% slice(row_index)
+```
+
+
+
+---
+
+class: middle
+
+# Muestreo estratificado
+
+En este caso se divide a la población en estratos (por ejemplo, grupos étnicos o de edad en una encuesta de hogares, tamaño de empresas en una encuesta de empresas) y se obteniene una muestra aleatoria simple independiente en cada uno de éstos. La implementación de este tipo de muestreo tiene un menor costo y entrega estimaciones más precisas (menor varianza).
+
+---
+
+class: middle
+
+# Muestreo por clusters
+En este tipo de muestreo, la población se divide en clusters y se extrae una muestra aleatoria simple de clusters y se incluyen en la muestra todos los casos de los clusters seleccionados. 
+
+# Muestreo multi-etápico
+Primero, se extrae una muestra aleatoria simple de clusters (por ejemplo, manzanas) y luego se selecciona una muestra aleatoria simple de las observaciones que pertenecen a los clusters elegidos (por ejemplo, viviendas). En este caso, el muestreo sería bi-etápico, pero también pueden incluirse más de dos etapas, en cuyo caso el muestreo se denominaría multi-etápico.
+
+
+---
+
+class: middle
+
+# Sampling weights
+
+Un individuo que es muestreado con una probabilidad de $\pi_i$ representa $\frac{1}{\pi_i}$ individuos en la población. El valor $\frac{1}{\pi_i}$ se denomina sampling weight.
+
+A frequency weight of 1000 means that the sample contains 
+1000 identical observations
+
+
+---
+class: middle
+
+# Diseños muestrales complejos
+
+---
+
+class: middle
+
+# Muestreo no probabilístico
+
+Algunos tipos de muestreo no probabilístico son:
+
+- Muestreo por conveniencia
+- Muestreo por cuotas
+- Muestreo por juicio experto
+- Muestreo de bola de nieve
+
+---
+
+class: middle
+
+# Muestreo por conveniencia
+Los casos incluidos en la muestra son los de más fácil acceso. 
+
+# Muestreo por cuotas
+La población objetivo es dividida en un determinado número de grupos, cuya distribución poblacional es conocida y la composición de la muestra refleja esta distribución. Los tamaños muestrales de los grupos se denominan cuotas y para alcanzarla no se requiere usar muestreo aleatorio.
+
+---
+
+class: middle
+
+# Muestreo por juicio experto
+En este tipo de muestreo los casos son seleccionados usando el juicio experto.
+
+# Muestreo de bola de nieve
+A partir de la localización de ciertos casos que pertenecen a la población objetivo, éstos refieren a otros casos y, de esta forma, se construye una muestra de determinado tamaño como el desplazamiento de una bola de nieve.
+
+---
+
+class: right, bottom
+
+## Mientras en una muestra probabilística cada unidad de la población tiene una probabilidad de selección conocida, en el muestreo no probabilístico dicha probabilidad no es conocida 
+
+---
+
+class: right, bottom
+
+## El método de seleccionar una muestra de la población es crítico para determinar la validez de las conclusiones obtenidas a partir de la muestra acerca de la población.
+
+
+---
+
+class: middle
+
+# Sesgo muestral
+
+Sesgo muestral ocurre cuando el método de seleccionar la muestra provoca que ésta difiera de la población objetivo, afectando negativamente cualquier generalización a la población de los resultados obtenidos a partir de la muestra.
+
+---
+
+class: right, bottom
+
+## Muestreo probabilístico tiende a producir una muestra representativa de la población. Sin embargo, la existencia de subcobertura y no respuesta puede afectar negativamente la representatividad de la muestra
+
+---
+
+class: right, bottom
+
+## En general, muestreo no probabilístico tiende a producir una muestra no representativa de la población
+
+---
+
+class: middle
+
+# ¿Qué significa independiente e idénticamente distribuidas (i.i.d.)?
+
+Si $X_1, X_2, ..., X_n$ son extracciones de la misma distribución y están independientemente distribuidas, entonces son independientes idénticamente distribuidas.
+
+---
+
+class: middle
+
+# Parámetro poblacional y estadístico muestral
+
+## Parámetro poblacional
+
+Es una medición numérica que describe algunas características de una población. 
+
+## Estadístico muestral
+
+Un estadístico muestral es una métrica calculada para un muestra obtenida de una población. 
+
+---
+
+class: middle
+
+<table style="width:100%">
+  <tr>
+    <th> </th>
+    <th>Parámetro poblacional</th>
+    <th>Estadístico muestral</th>
+  </tr>
+  <tr>
+    <td>Media</td>
+    <td>&mu;</td>
+    <td> <SPAN STYLE="text-decoration:overline">x</SPAN></td>
+  </tr>
+  <tr>
+    <td>Desviación estándar</td>
+    <td>&sigma;</td>
+    <td>s</td>
+  </tr>
+  <tr>
+    <td>Proporción</td>
+    <td>p</td>
+    <td>p&#770;</td>
+  <tr>
+    <td>Correlación</td>
+    <td>&#961;</span></td>
+    <td>r</td>
+  </tr>
+  </tr>
+</table>

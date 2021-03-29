@@ -1,0 +1,49 @@
+---
+title: "Diplomado Avanzado en Estadística usando R"
+---
+<br>
+<p>
+Profesor: Víctor Macías E.
+</p>
+<br>
+
+<h2>Descripción general</h2>
+
+Este Diplomado busca desarrollar competencias en el análisis estadístico y visualización de datos, usando el lenguaje de programación R. Los tópicos por discutir son los siguientes: muestreo y datos faltantes, gráficos interactivos y animaciones, representación de datos en mapas, construcción de dashboards y aplicaciones web usando shiny, funciones e iteración, modelos de aprendizaje automático supervisado y no supervisado y minería de textos.
+
+<h2>Objetivos del aprendizaje</h2>
+
+<ul>
+  <li>Utilizar técnicas básicas de la estadística descriptiva y establecer relaciones empíricas entre variables que aporten a la toma de decisiones.</li>
+  <li>Realizar análisis en forma reproducible y letrada (literate), es decir, que sean transparentes para un tercero y que, tanto la documentación, el medio elegido (por ejemplo, el software) como la organización del análisis haga factible y fácil reproducir el mismo análisis del autor.</li>
+</ul>
+
+Este curso aporta al perfil de egreso del estudiante en los siguientes aspectos:
+
+<ul>
+  <li>Desarrollo de competencias analíticas y de resolución de problemas.</li>
+  <li>Desarrollar competencias tecnológicas: programación, ciencia de datos, TI.</li>
+</ul>
+
+<h2>Programa del curso <a href= "ProgramaCurso/Programa Estadistica I (syllabus 2021-1).pdf">[link]</a></h2>
+
+El curso está estructurado en 4 unidades:
+
+<ol>
+    <li>Estadística descriptiva y visualización estadística</li>
+    <li>Modelación de datos con regresión lineal</li>
+    <li>Variables aleatorias y probabilidad</li>
+    <li>Estadísticas muestrales como variables aleatorias</li>
+</ol>
+
+<h2>Evaluaciones</h2>
+
+<ul>
+    <li>Controles individuales (10%)</li>
+    <li>Prueba solemne individual (20%)</li>
+    <li>Participación en clases (20%)</li>
+    <li>Trabajo semestral (50%)</li>
+</ul>
+
+
+

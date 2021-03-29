@@ -1,0 +1,43 @@
+name: "my-website"
+navbar:
+  title: ICO09212
+  left:
+    - text: Notas de Clases
+      menu: 
+        - text: Estadística y datos
+          href: NotasClases/DatosYVariables.html
+        - text: Distribución de los datos
+          href: NotasClases/DistribuciónFrecuencias.html
+        - text: Medidas de localización, dispersión y distribución
+          href: NotasClases/EstadísticaDescriptiva.html
+    - text: Tutoriales de R
+      menu: 
+        - text: Instalación de R
+          href: tutoriales/installR.html
+        - text: Tibbles y algo más
+          href: tutoriales/TibblesYMas.html  
+        - text: R Markdown
+          href: tutoriales/IntroRMarkdown.html
+        - text: Importar datos a R
+          href: tutoriales/ImportarR.html
+        - text: Introducción a dplyr y tidyr
+          href: tutoriales/Intro_dplyr.html
+        - text: Factores, variables y valores etiquetados
+          href: tutoriales/Factores.html  
+    - text: Guías de Ejercicios
+      menu: 
+        - text: Guía 1
+          href: Guias/Guia_1.pdf
+    - text: Bibliografía
+      href: Bibliografia.html
+    - text: Recursos
+      href: Recursos.html
+output:
+  html_document:
+    theme: flatly
+    highlight: textmate
+    css: styles.css
+    
+
+    
+  
