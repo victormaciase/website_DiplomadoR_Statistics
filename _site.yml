@@ -1,11 +1,11 @@
 name: "my-website"
 navbar:
-  title: ICO09212
+  title: RStats
   left:
     - text: Notas de Clases
-      menu: 
-        - text: Estadística y datos
-          href: NotasClases/DatosYVariables.html
+      menu:
+        - text: Estadística y datos 
+          href: NotasClases/DatosYVariables.html      
         - text: Distribución de los datos
           href: NotasClases/DistribuciónFrecuencias.html
         - text: Medidas de localización, dispersión y distribución
@@ -23,13 +23,15 @@ navbar:
         - text: Introducción a dplyr y tidyr
           href: tutoriales/Intro_dplyr.html
         - text: Factores, variables y valores etiquetados
-          href: tutoriales/Factores.html  
+          href: tutoriales/Factores.html
+        - text: Fechas y horas
+          href: tutoriales/FechasHoras.html  
+        - text: Gráficos en ggplot2
+          href: tutoriales/Intro_ggplot2.html
     - text: Guías de Ejercicios
       menu: 
         - text: Guía 1
           href: Guias/Guia_1.pdf
-    - text: Bibliografía
-      href: Bibliografia.html
     - text: Recursos
       href: Recursos.html
 output:

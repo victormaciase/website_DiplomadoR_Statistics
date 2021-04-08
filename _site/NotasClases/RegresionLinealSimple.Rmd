@@ -1,0 +1,310 @@
+---
+title: "Regresión lineal simple"
+author: "Víctor Macías E."
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+library(forcats)
+library(tidymodels)
+library(kableExtra)
+library(HistData)
+library(openintro)
+library(skimr)
+library(broom)
+library(janitor)
+
+```
+
+```{r echo=FALSE}
+data("GaltonFamilies")
+
+son_data <- GaltonFamilies %>% filter(gender == "male")
+```
+
+---
+
+class: middle
+
+# Aplicación: Estatura de hijos y padres
+
+A continuación trabajaremos con datos de 934 hijos de 205 familias que fueron usadas por Galton en 1886 [1].
+
+.footnote[
+[1] Los datos se encuentran disponibles en el paquete *HistData*.
+]
+
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+GaltonFamilies %>% ggplot(aes(x = childHeight)) + 
+  geom_histogram(bins = 13, colour = "#636363", fill = "#3fa3ab") + 
+  scale_y_continuous(expand= c(0,0)) +
+  labs(title = "Distribución de estatura de hijos",
+       x= "Estatura (en pulgadas)",
+       y = "Frecuencia") +
+  p
+```
+
+
+---
+
+class: middle
+
+# Aplicación: Estatura de padres e hijos
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618, warning = FALSE, message=FALSE}
+son_data %>% ggplot(aes(x=father, y = childHeight)) +
+  geom_point(colour = "#027e88", alpha = 0.5) +
+  geom_smooth(method = "lm", size = 0.5, color = "#636363", se = FALSE) +
+  labs(x = "Estatura de padre",
+       y = "Estatura de hijo") +
+  p
+```
+
+El coeficiente de correlación entre la estatura del padre y del hijo es `r son_data %>% summarize(r = round(cor(father, childHeight),2)) %>% pull(r)`.
+
+---
+
+class: middle
+
+```{r}
+son_data %>% group_by(family) %>% sample_n(1) %>% ungroup() %>%
+  summarize(
+    n = n(),                           # Número de observaciones
+    mean_father = mean(father),        # Media aritmética altura del padre
+    mean_child = mean(childHeight),    # Media aritmética altura del hijo
+    sd_father = sd(father),            # Desviación estándar altura del padre
+    sd_child = sd(childHeight),        # Desviación estándar altura del hijo
+    cov_father_child = cov(father, childHeight),  # Covarianza altura del padre e hijo
+    corr_father_child = cor(father, childHeight)) %>%  # Correlación altura del padre e hijo     
+  kbl(digits = 2) %>% kable_styling(bootstrap_options = "striped", font_size = 13)
+```
+
+```{r echo=FALSE}
+data("loans_full_schema")
+```
+
+
+Modelar la relación entre dos variables:
+
+- `y` que se conoce como variable dependiente, variable  explicada, variable respuesta, variable predicha o regresando
+
+- `x` que se conoce como variable independiente, variable explicativa, variable de control, variable predictora o regresor
+
+donde `y` es una función de `x`
+
+
+---
+
+class: middle
+
+# ¿Cuál es el propósito de un modelo?
+
+## Explicar 
+
+- Describir y cuantificar la relación entre una variable respuesta y un conjunto de variables explicativas
+- Determinar la significancia de una relación
+- Identificar la relación causal entre variables 
+
+## Predecir 
+
+- Predecir una variable respuesta `y` basado en un conjunto de predictores `x`
+- A diferencia de un modelo que busca explicar y donde es importante entender la relación e interacción entre variables, en el caso de modelos predictivos es más importante que el modelo realice buenas predicciones.
+
+---
+
+---
+
+class: middle
+
+# Aplicación:
+
+#### Variable respuesta
+
+$$y           = 1 si persona desarrolló cáncer al pulmón\\
+            = 0 si persona no desarrolló cáncer al pulmón$$
+
+#### Variable respuesta
+
+- `sexo`: hombre, mujer
+- `edad`, medida en años
+- `ingreso familiar anual`
+- `cigs`: número promedio de cigarrillos fumados por día
+
+---
+
+class: middle
+
+#### Si el propósito del modelo es explicar...
+
+Describir y cuantificar los efectos de los factores de riesgo (sexo, edad, ingreso familiar, cigs) sobre la probabilidad de contraer cáncer al pulmón con el propósito de diseñar un programa para reducir la incidencia de cáncer al pulmón en la población.
+
+--
+
+#### Si el propósito del modelo es predecir...
+
+No interesa mucho entender cómo los factores de riesgo afectan la probabilidad de desarrollar cáncer al pulmón, sino sólo si el modelo permite realizar buenas predicciones acerca de quienes podrían desarrollar dicho cáncer.
+
+---
+
+class: bottom, right
+
+En un modelo de regresión lineal la variable `y` es cuantitativa y los `x`'s pueden ser variables cuantitativas o categóricas.
+
+---
+
+class: middle
+
+### Regresión lineal simple
+
+$$y = \beta_0 + \beta_1 x + u$$
+
+donde $\beta_0$ es el parámetro del intercepto, $\beta_1$ es el parámetro de la pendiente y $u$ es el término de error o perturbación que representa a factores distintos a $x$ que afectan a $y$
+
+--
+
+### Valor ajustado para y
+
+$$\widehat y = \widehat\beta_0 + \widehat\beta_1 x$$
+
+donde $\widehat \beta_0$ y $\widehat \beta_1$ son los estimadores puntuales de los parámetros $\beta_0$ y $\beta_1$, respectivamente.
+
+--
+
+### Residuos
+
+$$\widehat u=y-\widehat y$$
+
+---
+
+class: middle
+
+# ¿Cómo determinar la mejor línea de ajuste?
+
+--
+
+### Minimizar la suma del valor absoluto de los residuos
+
+$$|\widehat u_1| + |\widehat u_2| + |\widehat u_3| +...+|\widehat u_n| = \sum_{i=1}^n |\widehat u_i|$$
+
+Aún cuando en algunas situaciones puede ser conveniente, su implementación tiene algunas dificultades a nivel computacional como de teoría estadística.
+
+--
+
+### Minimizar la suma de cuadrados de los residuos
+
+$$\widehat u_1^2 + \widehat u_2^2 + \widehat u_3^2 +...+\widehat u_n^2 = \sum_{i=1}^n \widehat u_i^2$$
+
+$\widehat \beta_0$ y $\widehat \beta_1$ se obtienen de la minimización de $\sum_{i=1}^n \widehat u_i^2$ 
+
+---
+
+class: middle
+
+# Estimaciones de parámetros por mínimos cuadrados
+
+--
+
+- Al elevar al cuadrado cada uno de los residuos, la minimización del cuadrado de los residuos da mayor peso a los residuos más grandes...
+
+--
+
+- Los estimadores puntuales de los parámetros $\beta_0$ y $\beta_1$ son:
+
+$$\widehat \beta_1=\frac{s_y}{s_x}r$$
+
+donde $r$ es el coeficiente de correlación entre $x$ e $y$, $s_x$ y $s_y$ son las desviaciones estándar de $x$ e $y$, respectivamente.
+
+$$\widehat \beta_0=\overline y - \widehat \beta_1 \overline x$$
+
+--
+
+- La línea que minimiza la suma de cuadrados de los residuos pasa por el punto $(\overline x, \overline y)$, donde $\overline x$ y $\overline y$ son la media muestral de $x$ e $y$, respectivamente.
+
+---
+
+class: middle
+
+# Aplicación
+
+
+---
+
+class: middle
+
+# Interpretación de $\widehat \beta_0$ y $\widehat \beta_1$
+
+
+---
+
+class: inverse, center, middle
+
+# Medidas de bondad del ajuste
+
+
+---
+
+class: inverse, center, middle
+
+# Outliers en regresión lineal
+
+---
+
+class: middle
+
+Outliers son observaciones que se encuentran alejadas de la nube de puntos representada en un gráfico de dispersión.
+
+Pueden tener una gran influencia en los valores obtenidos de $\widehat \beta_0$ y $\widehat \beta_1$
+
+
+
+
+
+---
+
+class: middle
+
+# Aplicación: Estatura de hijos
+
+Usando los datos de Galton (1886) que fueron presentados anteriormente en un histograma, a continuación se presenta la estadística descriptiva para la estatura de los hijos, separada para los grupos de hombres y mujeres:
+
+```{r}
+GaltonFamilies %>% group_by(gender) %>% summarize(
+  n = n(),                           # Número de observaciones
+  mean = mean(childHeight),          # Media aritmética
+  sd = sd(childHeight),              # Desviación estándar
+  min = min(childHeight),            # Mínimo
+  p25 = quantile(childHeight, 0.25), # Percentil 25 o primer cuartil
+  p50 = median(childHeight),         # Percentil 50 o segundo cuartil
+  p75 = quantile(childHeight, 0.75), # Percentil 75 o tercer cuartil
+  max = max(childHeight)) %>%        # Máximo
+  kbl(digits = 1) %>% kable_styling(bootstrap_options = "striped", font_size = 13)
+```
+
+---
+
+class: middle
+
+
+```{r}
+GaltonFamilies %>% group_by(gender) %>% select(childHeight) %>% 
+  skim() %>% yank("numeric") %>% 
+  select(-c("skim_variable", "n_missing", "complete_rate", "hist")) %>% kbl(digits = 1) %>%
+  kable_styling(bootstrap_options = "striped", font_size = 13)
+```

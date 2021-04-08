@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Regresión lineal simple</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Víctor Macías E." />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regresión lineal simple
+### Víctor Macías E.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+Modelar la relación entre dos variables:
+
+- `y` que se conoce como variable dependiente, variable  explicada, variable respuesta, variable predicha o regresando
+
+- `x` que se conoce como variable independiente, variable explicativa, variable de control, variable predictora o regresor
+
+donde `y` es una función de `x`
+
+
+---
+
+class: middle
+
+# ¿Cuál es el propósito de un modelo?
+
+## Explicar 
+
+- Describir y cuantificar la relación entre una variable respuesta y un conjunto de variables explicativas
+- Determinar la significancia de una relación
+- Identificar la relación causal entre variables 
+
+## Predecir 
+
+- Predecir una variable respuesta `y` basado en un conjunto de predictores `x`
+- A diferencia de un modelo que busca explicar y donde es importante entender la relación e interacción entre variables, en el caso de modelos predictivos es más importante que el modelo realice buenas predicciones.
+
+---
+
+---
+
+class: middle
+
+# Aplicación:
+
+#### Variable respuesta
+
+`$$y           = 1 si persona desarrolló cáncer al pulmón\\
+            = 0 si persona no desarrolló cáncer al pulmón$$`
+
+#### Variable respuesta
+
+- `sexo`: hombre, mujer
+- `edad`, medida en años
+- `ingreso familiar anual`
+- `cigs`: número promedio de cigarrillos fumados por día
+
+---
+
+class: middle
+
+#### Si el propósito del modelo es explicar...
+
+Describir y cuantificar los efectos de los factores de riesgo (sexo, edad, ingreso familiar, cigs) sobre la probabilidad de contraer cáncer al pulmón con el propósito de diseñar un programa para reducir la incidencia de cáncer al pulmón en la población.
+
+--
+
+#### Si el propósito del modelo es predecir...
+
+No interesa mucho entender cómo los factores de riesgo afectan la probabilidad de desarrollar cáncer al pulmón, sino sólo si el modelo permite realizar buenas predicciones acerca de quienes podrían desarrollar dicho cáncer.
+
+---
+
+class: bottom, right
+
+En un modelo de regresión lineal la variable `y` es cuantitativa y los `x`'s pueden ser variables cuantitativas o categóricas.
+
+---
+
+class: middle
+
+### Regresión lineal simple
+
+`$$y = \beta_0 + \beta_1 x + u$$`
+
+donde `\(\beta_0\)` es el parámetro del intercepto, `\(\beta_1\)` es el parámetro de la pendiente y `\(u\)` es el término de error o perturbación que representa a factores distintos a `\(x\)` que afectan a `\(y\)`
+
+--
+
+### Valor ajustado para y
+
+`$$\widehat y = \widehat\beta_0 + \widehat\beta_1 x$$`
+
+donde `\(\widehat \beta_0\)` y `\(\widehat \beta_1\)` son los estimadores puntuales de los parámetros `\(\beta_0\)` y `\(\beta_1\)`, respectivamente.
+
+--
+
+### Residuos
+
+`$$\widehat u=y-\widehat y$$`
+
+---
+
+class: middle
+
+# ¿Cómo determinar la mejor línea de ajuste?
+
+--
+
+### Minimizar la suma del valor absoluto de los residuos
+
+`$$|\widehat u_1| + |\widehat u_2| + |\widehat u_3| +...+|\widehat u_n| = \sum_{i=1}^n |\widehat u_i|$$`
+
+Aún cuando en algunas situaciones puede ser conveniente, su implementación tiene algunas dificultades a nivel computacional como de teoría estadística.
+
+--
+
+### Minimizar la suma de cuadrados de los residuos
+
+`$$\widehat u_1^2 + \widehat u_2^2 + \widehat u_3^2 +...+\widehat u_n^2 = \sum_{i=1}^n \widehat u_i^2$$`
+
+`\(\widehat \beta_0\)` y `\(\widehat \beta_1\)` se obtienen de la minimización de `\(\sum_{i=1}^n \widehat u_i^2\)` 
+
+---
+
+class: middle
+
+# Estimaciones de parámetros por mínimos cuadrados
+
+--
+
+- Al elevar al cuadrado cada uno de los residuos, la minimización del cuadrado de los residuos da mayor peso a los residuos más grandes...
+
+--
+
+- Los estimadores puntuales de los parámetros `\(\beta_0\)` y `\(\beta_1\)` son:
+
+`$$\widehat \beta_1=\frac{s_y}{s_x}r$$`
+
+donde `\(r\)` es el coeficiente de correlación entre `\(x\)` e `\(y\)`, `\(s_x\)` y `\(s_y\)` son las desviaciones estándar de `\(x\)` e `\(y\)`, respectivamente.
+
+`$$\widehat \beta_0=\overline y - \widehat \beta_1 \overline x$$`
+
+--
+
+- La línea que minimiza la suma de cuadrados de los residuos pasa por el punto `\((\overline x, \overline y)\)`, donde `\(\overline x\)` y `\(\overline y\)` son la media muestral de `\(x\)` e `\(y\)`, respectivamente.
+
+---
+
+class: middle
+
+# Aplicación
+
+
+---
+
+class: middle
+
+# Interpretación de `\(\widehat \beta_0\)` y `\(\widehat \beta_1\)`
+
+
+---
+
+class: inverse, center, middle
+
+# Medidas de bondad del ajuste
+
+
+---
+
+class: inverse, center, middle
+
+# Outliers en regresión lineal
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

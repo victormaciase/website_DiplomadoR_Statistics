@@ -1,0 +1,176 @@
+---
+title: "Fechas y horas"
+author: "Víctor Macías E."
+output:
+  tufte::tufte_html: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+
+Para trabajar con fechas y horas usaremos el paquete **_lubridate_** que se recomienda revisar en el siguiente link:
+
+<https://cran.r-project.org/web/packages/lubridate/lubridate.pdf>
+
+```{r}
+library(lubridate)
+```
+
+
+La norma ISO 8601 especifica la notación estándar utilizada para representar fechas y horas:  
+
+- Fechas representadas como *YYYY-MM-DD*
+- Horas representadas como *HH:MM:SS*
+
+# ¿Cómo capturar la dimensión temporal de los datos?
+
+A continuación se presentan tres alternativas: *date*, *time* y *date-time*.
+
+- *date* es la fecha. Por ejemplo, 2020-09-28. Para obtener la fecha del día de hoy, escribir `today()`
+
+- *time* es una hora dentro de un día. Por ejemplo, 08:48:12
+
+- *date-time* combina *date* y *time*. Son también conocidos como *POSIXct*. Por ejemplo, 2020-09-28 08:48:12. Para obtener la fecha y hora de este momento, escribir `now()`
+
+
+# ¿Cómo crear una fecha?
+
+Una fecha se puede crear de un <em>string</em>, componentes individuales de <em>date-time</em> u otra fecha o fecha-hora.
+
+Algunos ejemplos que muestran la creación de un <em>date</em> son:
+
+```{r}
+as.Date("2020-09-27") 
+
+ymd("2020-09-27")   
+
+ymd(20200927)   
+
+dmy("27-09-2020")
+
+dmy("27-Septiembre-2020")  
+```
+
+Algunos ejemplos que muestran la creación de un <em>dttm</em> son:
+
+```{r}
+as.POSIXct("2020-09-28 20:13:00", tz = "America/Santiago")
+ymd_hms("2020-09-21 14:04:32", tz = "America/Santiago")
+```
+
+
+Para convertir un objeto a *date* o *datetime* usar *as_date()* o *as_datetime()*.
+
+```{r}
+as_date("2020-09-29 20:49:34")
+
+as_datetime("2020-09-29")
+
+```
+
+# Todo comienza el 01 de enero de 1970
+
+Objetos que son definidos como fechas son almacenados internamente como el número de días desde el 1 de enero de 1970. 
+
+```{r}
+as_date(0)  # En este caso 0 es un número ¿Qué representa?
+
+as_date(7)
+
+as_date(-2)
+```
+
+# Operaciones aritméticas con fechas
+
+Al definir fechas se pueden realizar operaciones aritméticas entre éstas, como por ejemplo:
+
+
+```{r}
+ymd("2020-11-18") + 2
+
+ymd("2020-12-31") - ymd("1983-11-18")
+
+ymd("2020-12-02") + weeks(5)
+
+today() + 1:5*weeks(2)
+
+dmy("31-12-2019") %m+% (1:12*months(1))
+```
+
+# Zonas horarias
+
+Hay una lista de 594 zonas horarias a nivel mundial, las cuales se pueden obtener OlsonNames(). En el caso del continente americano, la lista incluye 167 zonas horarias. Las primeras 10 son:
+
+```{r }
+stringr::str_subset(OlsonNames(), "^America")[1:10]
+```
+
+Para chequear la zona horaria en que nos encontramos: 
+
+```{r}
+Sys.timezone()
+```
+
+A continuación se presentan dos ejemplos de manipulación de fechas.
+
+
+```{r}
+library(tibble)
+library(dplyr)
+```
+
+## Ejemplo 1:
+
+En este ejemplo se generará <em>date</em> y <em>dttm</em> a partir de <em>dbl</em>.
+
+```{r}
+data1 <- tibble(
+  year = c(2018, 2019, 2020),
+  mes = c(5, 8, 6),
+  dia = c(20, 12, 4),
+  hora = c(19, 4, 6), 
+  minuto = c(23, 45, 5), 
+  segundo = c(44, 12, 53))
+
+data1
+```
+
+
+```{r}
+data1 <- data1 %>% 
+  mutate(fecha = make_date(year, mes, dia),
+         fecha_hora = make_datetime(year, mes, dia, hora, minuto, segundo))
+
+data1
+```
+
+## Ejemplo 2:
+
+En este ejemplo a partir de <em>dttm</em> se extraerá el día, mes, año, hora y día de la semana, entre otros.
+
+```{r}
+data2 <- tibble(date_time = c("2018-05-20 12:56:32", 
+                              "2019-08-12 04:23:45", 
+                              "2020-06-04 19:43:09"))
+
+data2
+```
+
+
+```{r}
+data2 <- data2 %>% 
+  mutate(
+    fecha = ymd_hms(date_time),
+    fecha1 = as_date(fecha),
+    fecha2 = stamp_date("28/09/2020")(fecha1),
+    agno = year(fecha),
+    mes = month(fecha, label = TRUE, abbr = FALSE),
+    dia = day(fecha),
+    dia_agno = yday(fecha),
+    dia_semana = wday(fecha, label = TRUE, abbr = FALSE))
+
+data2 %>% select(-date_time)
+```

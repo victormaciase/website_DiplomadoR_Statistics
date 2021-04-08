@@ -1,0 +1,29 @@
+<style>
+
+div {
+  background-color: lightgrey;
+  width: 300px;
+  border: 15px blue;
+  padding: 50px;
+  margin: 20px;
+}
+
+h1, h2 {
+  font-family: Verdana, sans-serif;
+}
+
+
+p, ul, li {
+  color: gray;
+  font-family: Verdana, sans-serif;
+  margin: 9px 0;
+}
+
+p.groove {border-style: groove;}
+
+.p1 {
+  text-indent: 1em;
+}
+
+
+</style>

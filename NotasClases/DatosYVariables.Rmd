@@ -1,0 +1,368 @@
+---
+title: "Estadística y datos"
+author: "Víctor Macías E."
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+#options(htmltools.dir.version = FALSE)
+
+options(htmltools.preserve.raw = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(gganimate)
+library(dplyr)
+library(tidyquant)
+library(datasauRus)
+library(kableExtra)
+library(HistData)
+library(openintro)
+```
+
+
+class: bottom, right
+
+## Estadística es la ciencia y arte de recolectar, organizar, describir y analizar datos con el propósito de convertir los datos en conocimiento y entender el mundo a nuestro alrededor
+
+---
+
+class: inverse, center, middle
+
+# Y el trabajo comienza con una pregunta...
+
+---
+
+class: middle
+
+
+### ¿Mejora la reducción del tamaño de la clase el desempeño de los estudiantes?
+
+--
+
+### ¿Existe un castigo salarial a los inmigrantes?
+
+--
+
+### ¿Cuánto reduce el consumo de cigarrillos los impuestos sobre éstos?
+
+--
+
+### ¿Trabajar desde la casa aumenta la satisfacción con el trabajo?
+
+---
+
+class: inverse, center, middle
+
+# Estadística es aprender de los datos
+
+---
+
+class: middle
+
+## Estadística descriptiva
+
+Se refiere a los métodos usados para organizar, presentar y resumir los datos. 
+
+--
+
+## Estadística inferencial
+
+Se refiere a los métodos usados para obtener conclusiones relativas a una población a partir de una muestra. 
+
+---
+
+class: inverse, center, middle
+
+# Empezando a entender los datos
+
+---
+class: middle
+
+## Elementos 
+
+Son las entidades de las que se obtienen los datos (por ejemplo, empresas, países, escuelas, etc.)
+
+--
+
+## Variable
+
+Es un atributo o característica observada de los elementos. En el caso de una empresa: endeudamiento, número de empleados, utilidad, etc.
+
+--
+## Observación
+
+Conjunto de mediciones obtenidas para cada variable de un determinado elemento.
+
+
+---
+
+class: bottom, right
+
+## Los valores encontrados para cada variable en cada uno de los elementos constituyen los datos 
+
+---
+class: bottom, right
+
+## Una fotografía, un archivo de audio o un tweet son también datos 
+
+---
+
+class: bottom, right
+
+## A los datos reunidos para un determinado estudio se les llama conjunto de datos 
+
+---
+
+class: middle
+
+# Aplicación: Préstamos en Lending Club
+
+A continuación se presentan las primeras 5 observaciones y 5 variables del conjunto de datos *loan50* que se encuentran disponibles en el paquete *openintro*.
+
+```{r echo = FALSE}
+data("loan50")
+```
+
+```{r echo = FALSE}
+loan50 %>% select(loan_amount, interest_rate, term, total_income, homeownership) %>%
+  DT::datatable(head(5),
+                rownames = FALSE,
+                options = list(pageLength = 5, dom = 'tip'))
+```
+
+Se recomienda revisar <https://www.lendingclub.com/> para mayor información.
+
+---
+
+class: bottom, right
+
+## Conocer el significado de cada variable y su unidad de medición es esencial para entender las posibles implicaciones obtenidas del análisis de los datos
+
+---
+
+class: middle
+
+# Descripción de variables
+
+```{r echo = FALSE}
+tibble::tibble(
+  `Variable` = c('loan_amount', 'interest_rate', 'term', 'grade', 'state', 'total_income', 'homeownership'),
+  `Descripción` = c("Monto del préstamo recibido (en dólares)",
+                    "Tasa de interés del préstamo (% anual)",
+                    "Plazo del préstamo (número de meses)",
+                    "Calidad del préstamo y probabilidad de repago. Toma valores de A a G",
+                    "Estado de Estados Unidos donde el prestatario reside",
+                    "Ingreso total del prestatario (en dólares)",
+                    "Indica si la persona es dueña, dueña pagando un crédito hipotecario o arrienda")
+                    
+  ) %>%
+    kbl(format = 'html')
+```
+
+<em>Nota:</em> En esta tabla se incluyen las variables `grade` y `state` que no fueron incorporadas anteriormente.
+
+---
+class: inverse, center, middle
+
+# Tipos de variables y escalas de medición
+
+---
+
+class: middle
+
+# Aplicación: Tipos de variables en `loan50`
+
+Para cada una de las siguientes variables en `loan50` identifique su tipo.
+
+```{r echo = FALSE}
+tibble::tibble(
+  `Variable` = c('loan_amount', 'interest_rate', 'term', 'grade', 'state', 'total_income', 'homeownership'),
+  `Tipo de variable` = c("?",
+             "     ?",
+             "     ?",
+             "     ?",
+             "     ?",
+             "     ?",
+             "     ?")) %>%
+    kbl(format = 'html')
+
+```
+
+---
+
+class: middle
+
+```{r}
+loan50 %>% 
+  select(loan_amount, interest_rate, term, grade, 
+         state, total_income, homeownership) %>%
+  glimpse(width = 70) 
+```
+
+---
+
+class: middle
+
+## Variables cualitativas o categóricas
+
+Una variable es cualitativa si cada observación pertenece a una de distintas categorías o niveles. 
+
+--
+
+## Variables cuantitativas
+
+Una variable es cuantitativa si los datos son valores discretos o continuos que representan diferentes magnitudes de la variable. Estos valores pueden sumarse, multiplicarse, promediarse, etc. 
+
+- Si el número de valores que toma la variable es un conjunto finito como, por ejemplo, 0, 1, 2, 3, 4..., se dice que es discreta. Por ejemplo, número de visitas al médico.
+- Si la variable toma un número infinito de valores posibles, se dice que es continua. Por ejemplo, peso de una persona medido en kilos.
+
+--
+<hr>
+<h5>Una variable como es el código telefónico no es cuantitativa, aún cuando tome valores numéricos.</h5>
+<hr>
+
+---
+
+class: middle
+
+Una variable cualitativa contiene datos que se obtienen usando una escala de medición nominal u ordinal.
+
+--
+## Escala nominal 
+
+En este caso, el dato de una variable es una categoría que identifica un atributo de un elemento. No existe orden entre las distintas categorías. Por ejemplo, la variable sexo que toma los valores hombre y mujer.
+
+--
+## Escala ordinal
+
+A diferencia de la escala nominal, en esta escala las categorías tienen un orden. Por ejemplo, calidad de servicio medida como excelente, buena y mala. 
+
+
+---
+
+class: middle
+
+Una variable cuantitativa contiene datos que se obtienen usando una escala de medición de intervalo o de razón.
+
+--
+## Escala de intervalo
+
+En este caso, los datos reflejan un orden y el intervalo entre valores se expresa en términos de una unidad de medición fija. Sin embargo, el cero no representa ausencia de un atributo. Por ejemplo, temperatura medida en grados Celsius.
+
+--
+## Escala de razón
+
+Esta escala es similar a la de intervalo, pero requiere que se incluya el valor cero para indicar ausencia de atributo. En este sentido, el cero es absoluto. La proporción entre valores que toma la variable tiene sentido. Por ejemplo, ingreso de una persona.
+
+---
+
+class: bottom, right
+
+
+## El tipo de escala de medición determina cuánta información contiene el dato y, además, señala la manera más apropiada para resumir y analizar los datos
+
+
+---
+class: inverse, right, middle
+
+## Estadística es el estudio de la variación en los datos
+
+
+---
+
+class: middle
+
+## Datos de sección cruzada o de corte transversal
+
+Corresponden a datos de varios individuos o entidades (empresas, escuelas, etc.) que se recopilan para un único periodo de tiempo. 
+
+--
+## Datos de series temporales
+
+Son datos para un único individuo o entidad (persona, empresa, país) recogidos para múltiples periodos. 
+
+---
+
+class: middle
+
+## Combinación de cortes transversales
+
+Combina 2 o más cortes transversales.
+
+--
+## Datos de panel o longitudinales
+
+Son datos sobre varios individuos o entidades en los que cada individuo se observa durante dos o más periodos de tiempo.
+
+---
+
+class: middle
+
+# Aplicación: World Development Indicators
+
+.center[![description of the image](images/WDI.jpg)]
+
+.footnote[Fuente: <http://datatopics.worldbank.org/world-development-indicators/>]
+
+---
+
+class: middle
+
+# Aplicación: Precio del bitcoin
+
+```{r echo = FALSE}
+bitcoin <- tq_get("CBBTCUSD", get = "economic.data", from = "2016-01-01", to = "2021-03-31")
+```
+
+```{r echo = FALSE, fig.align = "center", fig.asp = 0.618}
+bitcoin %>% 
+  ggplot(aes(x = date, y = price)) +
+  geom_line(colour = "#3fa3ab", size = 0.7) +
+  geom_point(colour = "#4460B2") +
+  geom_text(aes(label = round(price,1)), hjust = -0.2, size = 3, colour = "#9F2A2A") +
+  scale_x_date(date_breaks = "1 years", date_labels = "%Y") +
+  coord_x_date(xlim = c("2016-01-01", "2021-05-31")) +
+  labs(
+       caption = paste0("Fuente: Elaboración propia en base a datos obtenidos", "\n", "de Federal Reserve Bank of St. Louis (FRED)", "\n", "https://fred.stlouisfed.org/series/CBBTCUSD"),
+       x = NULL,
+       y = "Precio (US$)") +
+  theme_tq() +
+  transition_reveal(date)
+```
+
+
+
+---
+class: inverse, right, middle
+
+## Experimentos y estudios observacionales son dos fuentes de datos
+
+---
+
+class: middle 
+
+# Experimento aleatorizado controlado
+
+En este tipo de estudios los participantes se asignan de manera aleatoria al grupo de control, que no recibe tratamiento, o al grupo de tratamiento, que sí lo recibe. En dicho experimento, la única razón sistemática para la diferencia en resultados entre los grupos tratamiento y control es el tratamiento.
+
+Los experimentos son diseñados para investigar un efecto causal. Uno de los ejemplos más comunes es el uso de experimentos para evaluar el impacto de un tratamiento que puede ser un programa gubernamental, una vacuna, un medicamento, nivel de luminosidad, etc.
+
+Entre las dificultades prácticas para llevar a cabo experimentos se encuentran: problemas éticos, son caros y la implementación muchas veces no es satisfactoria. Además, no siempre es posible llevar a cabo experimentos. Por ejemplo, no es posible aleatorizar cierto tipo de hábitos como el fumar o alimentarse con una dieta no saludable.
+
+---
+
+class: middle
+
+# Estudios observacionales
+
+En este tipo de estudios los datos son obtenidos mediante la observación del comportamiento real fuera de un marco experimental. Algunos ejemplos incluyen a datos provenientes de encuestas, registros administrativos, transacciones de supermercados, etc.
+

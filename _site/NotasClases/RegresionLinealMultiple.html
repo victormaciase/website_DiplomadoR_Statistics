@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Regresión lineal múltiple</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Víctor Macías E." />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regresión lineal múltiple
+### Víctor Macías E.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+A continuación se crearán dos variables:
+
+- `bankruptcy` que toma el valor 1 si `public_record_bankrupt` es mayor o igual a 1 y toma el valor cero, en otro caso.
+- `credit_util` es igual al cuociente entre `total_credit_utilized` y `total_credit_limit`
+
+
+```r
+loans &lt;- loans_full_schema %&gt;% 
+  mutate(bankruptcy = if_else(public_record_bankrupt &gt;= 1, 1, 0),
+         credit_util = total_credit_utilized / total_credit_limit)
+```
+
+---
+
+class: middle
+
+
+```r
+glimpse(loans$credit_check)
+```
+
+```
+## Warning: Unknown or uninitialised column: `credit_check`.
+```
+
+```
+##  NULL
+```
+
+---
+
+class: middle
+
+### Caso 1: Predictor que es variable categórica con 2 niveles 
+
+El modelo a estimar es el siguiente:
+
+`$$interest\_rate = \beta_0+\beta_1bankruptcy+u$$`
+
+
+```r
+lm_model_1 &lt;- linear_reg() %&gt;% 
+            set_engine('lm') %&gt;%
+            fit(interest_rate ~ bankruptcy, data = loans)
+```
+
+
+```r
+tidy(lm_model_1)
+```
+
+```
+## # A tibble: 2 x 5
+##   term        estimate std.error statistic    p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 (Intercept)   12.3      0.0533    231.   0         
+## 2 bankruptcy     0.737    0.153       4.82 0.00000147
+```
+
+---
+
+class: middle
+
+Por lo tanto, el modelo estimado es:
+
+`$$\widehat{interest\_rate}=12.33+0.74\times bankruptcy$$`
+
+`\(\hat \beta_1=0.74\)` significa que el modelo predice una tasa de interés 0.74 puntos porcentuales superior para prestatarios con al menos una bancarrota en sus registros. 
+
+---
+
+class: middle
+
+### Caso 3: Predictor que es variable categórica con 3 niveles
+
+El predictor, `verified_income`, es una variable categórica que tiene 3 niveles: `Not Verified`, `Source Verified` y `Verified`.
+
+
+```r
+loans &lt;- loans %&gt;% 
+  mutate(verified_income = fct_drop(verified_income, only = "")) 
+
+loans %&gt;%
+  tabyl(verified_income) %&gt;% adorn_totals("row") %&gt;% 
+  adorn_pct_formatting()
+```
+
+```
+##  verified_income     n percent
+##     Not Verified  3594   35.9%
+##  Source Verified  4116   41.2%
+##         Verified  2290   22.9%
+##            Total 10000  100.0%
+```
+
+---
+
+class: middle
+
+El resultado de la estimación se presenta en la siguiente tabla:
+
+
+```r
+lm_model_2 &lt;- linear_reg() %&gt;% 
+            set_engine('lm') %&gt;% 
+            fit(interest_rate ~ verified_income, data = loans)
+```
+
+
+```r
+tidy(lm_model_2)
+```
+
+```
+## # A tibble: 3 x 5
+##   term                           estimate std.error statistic   p.value
+##   &lt;chr&gt;                             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)                       11.1     0.0809     137.  0.       
+## 2 verified_incomeSource Verified     1.42    0.111       12.8 3.79e- 37
+## 3 verified_incomeVerified            3.25    0.130       25.1 8.61e-135
+```
+
+Note que `Verified income`  
+
+---
+
+class: middle
+
+Por lo tanto, el modelo estimado es:
+
+`$$\widehat{interest\_rate}=11.1+1.42\times verified\_income_{Source Verified}+\\ 3.25\times verified\_income_{Verified}$$`
+
+Usando los resultados de este modelo, se tiene que la tasa de interés promedio es:
+
+- `\(\widehat{interest\_rate}=11.1+1.42\times 0+ 3.25\times 0=11.1\%\)` para quienes ni la fuente ni el monto de sus ingresos han sido verificados.
+
+- `\(\widehat{interest\_rate}=11.1+1.42\times 1+ 3.25\times 0=12.52\%\)` para quienes la fuente de los ingresos ha sido verificada, pero no el monto de los ingresos.
+
+- `\(\widehat{interest\_rate}=11.1+1.42\times 0+ 3.25\times 1=14.35\)` para quienes la fuente de los ingresos no ha sido verificada, pero el monto de los ingresos sí ha sido verificado.
+
+---
+
+Cada coeficiente se interpreta como la diferencia entre la tasa de interés de una categoría determinada respecto a la categoría de referencia,`Not Verified`. 
+
+
+---
+
+class: bottom, right
+
+## Cuando un predictor es una variable categórica que tiene `\(k&gt;2\)` niveles, entonces el resultado presentará los `\(\beta 's\)` para `\(k-1\)` niveles y los restante coeficientes serán interpretados relativo a la categoría omitida que se conoce como nivel de referencia. 
+
+---
+
+class: bottom, right
+
+## In general, a categorical predictor with p different levels will be represented by `\(p−1\)` terms in a multiple regression model.
+ 
+---
+
+class: middle
+
+
+```r
+lm_model_3 &lt;- linear_reg() %&gt;% 
+            set_engine('lm') %&gt;%
+            fit(interest_rate ~ verified_income + debt_to_income + 
+                  credit_util + bankruptcy + term + issue_month, 
+                data = loans)
+
+tidy(lm_model_3)
+```
+
+```
+## # A tibble: 9 x 5
+##   term                           estimate std.error statistic   p.value
+##   &lt;chr&gt;                             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)                      2.23     0.210      10.6   3.42e- 26
+## 2 verified_incomeSource Verified   1.10     0.0996     11.0   3.72e- 28
+## 3 verified_incomeVerified          2.67     0.118      22.6   9.00e-111
+## 4 debt_to_income                   0.0227   0.00296     7.68  1.73e- 14
+## 5 credit_util                      4.84     0.163      29.7   1.79e-185
+## 6 bankruptcy                       0.524    0.133       3.95  8.00e-  5
+## 7 term                             0.154    0.00397    38.8   8.82e-307
+## 8 issue_monthJan-2018              0.0478   0.109       0.439 6.60e-  1
+## 9 issue_monthMar-2018             -0.0467   0.107      -0.435 6.64e-  1
+```
+
+
+---
+
+class: middle
+
+# Correlación entre predictores
+
+Dos variables predictores son colineales cuando están correlacionadas. 
+
+and this collinearity complicates model estimation. 
+
+Es imposible impedir la existencia de colinealidad en estudios observacionales, experiments are usually designed to prevent predictors from being collinear.
+
+---
+
+class: inverse, center, middle
+
+# Medidas de bondad del ajuste
+
+---
+
+class: middle
+
+## `\(R^2\)` o coeficiente de determinación
+
+Mide la proporción de la variación en `\(y\)` que es explicada por los `\(x's\)`, donde `\(0 \leq R^2 \leq 1\)`
+
+## `\(R^2\)` ajustado
+
+
+---
+
+class: inverse, center, middle
+
+# Selección de modelos
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

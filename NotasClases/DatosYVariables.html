@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Estadística y datos</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Víctor Macías E." />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+    <script src="libs/jquery-1.12.4/jquery.min.js"></script>
+    <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding-0.17/datatables.js"></script>
+    <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+    <link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Estadística y datos
+### Víctor Macías E.
+
+---
+
+
+
+
+
+
+
+
+class: bottom, right
+
+## Estadística es la ciencia y arte de recolectar, organizar, describir y analizar datos con el propósito de convertir los datos en conocimiento y entender el mundo a nuestro alrededor
+
+---
+
+class: inverse, center, middle
+
+# Y el trabajo comienza con una pregunta...
+
+---
+
+class: middle
+
+
+### ¿Mejora la reducción del tamaño de la clase el desempeño de los estudiantes?
+
+--
+
+### ¿Existe un castigo salarial a los inmigrantes?
+
+--
+
+### ¿Cuánto reduce el consumo de cigarrillos los impuestos sobre éstos?
+
+--
+
+### ¿Trabajar desde la casa aumenta la satisfacción con el trabajo?
+
+---
+
+class: inverse, center, middle
+
+# Estadística es aprender de los datos
+
+---
+
+class: middle
+
+## Estadística descriptiva
+
+Se refiere a los métodos usados para organizar, presentar y resumir los datos. 
+
+--
+
+## Estadística inferencial
+
+Se refiere a los métodos usados para obtener conclusiones relativas a una población a partir de una muestra. 
+
+---
+
+class: inverse, center, middle
+
+# Empezando a entender los datos
+
+---
+class: middle
+
+## Elementos 
+
+Son las entidades de las que se obtienen los datos (por ejemplo, empresas, países, escuelas, etc.)
+
+--
+
+## Variable
+
+Es un atributo o característica observada de los elementos. En el caso de una empresa: endeudamiento, número de empleados, utilidad, etc.
+
+--
+## Observación
+
+Conjunto de mediciones obtenidas para cada variable de un determinado elemento.
+
+
+---
+
+class: bottom, right
+
+## Los valores encontrados para cada variable en cada uno de los elementos constituyen los datos 
+
+---
+class: bottom, right
+
+## Una fotografía, un archivo de audio o un tweet son también datos 
+
+---
+
+class: bottom, right
+
+## A los datos reunidos para un determinado estudio se les llama conjunto de datos 
+
+---
+
+class: middle
+
+# Aplicación: Préstamos en Lending Club
+
+A continuación se presentan las primeras 5 observaciones y 5 variables del conjunto de datos *loan50* que se encuentran disponibles en el paquete *openintro*.
+
+
+
+<div id="htmlwidget-6c8708aae4399af42d5a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c8708aae4399af42d5a">{"x":{"filter":"none","data":[[22000,6000,25000,6000,25000,6400,3000,14500,10000,18500,17000,12000,16000,16500,3000,29400,13500,18200,6000,18000,5000,40000,4500,15000,20000,20000,10000,9000,35000,40000,13125,32000,18000,30000,4400,7000,25000,6500,35000,7500,38500,15000,24000,24000,12800,6000,30000,5825,20000,15000],[10.9,9.92,26.3,9.92,9.43,9.92,17.09,6.08,7.97,12.62,17.09,5.31,7.35,5.31,7.96,24.85,18.06,10.42,7.96,19.42,14.08,20,9.44,9.92,10.91,5.32,6.71,15.04,11.98,12.62,10.91,9.44,9.93,7.35,18.45,17.09,7.96,6.08,6.71,7.34,12.62,16.02,10.9,9.93,9.44,10.42,21.45,10.91,9.43,6.08],[60,36,36,36,60,36,36,36,60,60,36,36,36,36,36,60,60,60,36,60,36,60,36,36,60,36,36,36,60,36,36,36,60,36,36,36,36,36,36,36,60,36,60,36,36,36,36,36,36,36],[59000,60000,75000,75000,254000,67000,28800,80000,34000,192000,73000,120000,100000,105000,34000,98000,68700,144000,100000,76000,169528,168000,80000,185000,42000,270000,65000,45000,245000,192000,116000,112000,218000,103000,58000,55000,65000,32000,325000,70000,160000,50000,71000,85000,87000,60000,58500,50000,103000,77500],["rent","rent","mortgage","rent","mortgage","mortgage","rent","mortgage","rent","mortgage","rent","mortgage","rent","mortgage","rent","mortgage","rent","rent","rent","mortgage","mortgage","mortgage","mortgage","rent","mortgage","rent","mortgage","own","mortgage","mortgage","rent","mortgage","mortgage","rent","rent","own","mortgage","rent","mortgage","rent","mortgage","rent","rent","mortgage","mortgage","mortgage","mortgage","rent","own","mortgage"]],"container":"<table class=\"5\">\n  <thead>\n    <tr>\n      <th>loan_amount<\/th>\n      <th>interest_rate<\/th>\n      <th>term<\/th>\n      <th>total_income<\/th>\n      <th>homeownership<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"dom":"tip","columnDefs":[{"className":"dt-right","targets":[0,1,2,3]}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+
+Se recomienda revisar &lt;https://www.lendingclub.com/&gt; para mayor información.
+
+---
+
+class: bottom, right
+
+## Conocer el significado de cada variable y su unidad de medición es esencial para entender las posibles implicaciones obtenidas del análisis de los datos
+
+---
+
+class: middle
+
+# Descripción de variables
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Variable &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Descripción &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; loan_amount &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Monto del préstamo recibido (en dólares) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; interest_rate &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Tasa de interés del préstamo (% anual) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; term &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Plazo del préstamo (número de meses) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; grade &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Calidad del préstamo y probabilidad de repago. Toma valores de A a G &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; state &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Estado de Estados Unidos donde el prestatario reside &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; total_income &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ingreso total del prestatario (en dólares) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; homeownership &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Indica si la persona es dueña, dueña pagando un crédito hipotecario o arrienda &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;em&gt;Nota:&lt;/em&gt; En esta tabla se incluyen las variables `grade` y `state` que no fueron incorporadas anteriormente.
+
+---
+class: inverse, center, middle
+
+# Tipos de variables y escalas de medición
+
+---
+
+class: middle
+
+# Aplicación: Tipos de variables en `loan50`
+
+Para cada una de las siguientes variables en `loan50` identifique su tipo.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Variable &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Tipo de variable &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; loan_amount &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; interest_rate &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; term &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; grade &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; state &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; total_income &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; homeownership &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ? &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+class: middle
+
+
+```r
+loan50 %&gt;% 
+  select(loan_amount, interest_rate, term, grade, 
+         state, total_income, homeownership) %&gt;%
+  glimpse(width = 70) 
+```
+
+```
+## Rows: 50
+## Columns: 7
+## $ loan_amount   &lt;int&gt; 22000, 6000, 25000, 6000, 25000, 6400, 3000...
+## $ interest_rate &lt;dbl&gt; 10.90, 9.92, 26.30, 9.92, 9.43, 9.92, 17.09...
+## $ term          &lt;dbl&gt; 60, 36, 36, 36, 60, 36, 36, 36, 60, 60, 36,...
+## $ grade         &lt;fct&gt; B, B, E, B, B, B, D, A, A, C, D, A, A, A, A...
+## $ state         &lt;fct&gt; NJ, CA, SC, CA, OH, IN, NY, MO, FL, FL, MD,...
+## $ total_income  &lt;dbl&gt; 59000, 60000, 75000, 75000, 254000, 67000, ...
+## $ homeownership &lt;fct&gt; rent, rent, mortgage, rent, mortgage, mortg...
+```
+
+---
+
+class: middle
+
+## Variables cualitativas o categóricas
+
+Una variable es cualitativa si cada observación pertenece a una de distintas categorías o niveles. 
+
+--
+
+## Variables cuantitativas
+
+Una variable es cuantitativa si los datos son valores discretos o continuos que representan diferentes magnitudes de la variable. Estos valores pueden sumarse, multiplicarse, promediarse, etc. 
+
+- Si el número de valores que toma la variable es un conjunto finito como, por ejemplo, 0, 1, 2, 3, 4..., se dice que es discreta. Por ejemplo, número de visitas al médico.
+- Si la variable toma un número infinito de valores posibles, se dice que es continua. Por ejemplo, peso de una persona medido en kilos.
+
+--
+&lt;hr&gt;
+&lt;h5&gt;Una variable como es el código telefónico no es cuantitativa, aún cuando tome valores numéricos.&lt;/h5&gt;
+&lt;hr&gt;
+
+---
+
+class: middle
+
+Una variable cualitativa contiene datos que se obtienen usando una escala de medición nominal u ordinal.
+
+--
+## Escala nominal 
+
+En este caso, el dato de una variable es una categoría que identifica un atributo de un elemento. No existe orden entre las distintas categorías. Por ejemplo, la variable sexo que toma los valores hombre y mujer.
+
+--
+## Escala ordinal
+
+A diferencia de la escala nominal, en esta escala las categorías tienen un orden. Por ejemplo, calidad de servicio medida como excelente, buena y mala. 
+
+
+---
+
+class: middle
+
+Una variable cuantitativa contiene datos que se obtienen usando una escala de medición de intervalo o de razón.
+
+--
+## Escala de intervalo
+
+En este caso, los datos reflejan un orden y el intervalo entre valores se expresa en términos de una unidad de medición fija. Sin embargo, el cero no representa ausencia de un atributo. Por ejemplo, temperatura medida en grados Celsius.
+
+--
+## Escala de razón
+
+Esta escala es similar a la de intervalo, pero requiere que se incluya el valor cero para indicar ausencia de atributo. En este sentido, el cero es absoluto. La proporción entre valores que toma la variable tiene sentido. Por ejemplo, ingreso de una persona.
+
+---
+
+class: bottom, right
+
+
+## El tipo de escala de medición determina cuánta información contiene el dato y, además, señala la manera más apropiada para resumir y analizar los datos
+
+
+---
+class: inverse, right, middle
+
+## Estadística es el estudio de la variación en los datos
+
+
+---
+
+class: middle
+
+## Datos de sección cruzada o de corte transversal
+
+Corresponden a datos de varios individuos o entidades (empresas, escuelas, etc.) que se recopilan para un único periodo de tiempo. 
+
+--
+## Datos de series temporales
+
+Son datos para un único individuo o entidad (persona, empresa, país) recogidos para múltiples periodos. 
+
+---
+
+class: middle
+
+## Combinación de cortes transversales
+
+Combina 2 o más cortes transversales.
+
+--
+## Datos de panel o longitudinales
+
+Son datos sobre varios individuos o entidades en los que cada individuo se observa durante dos o más periodos de tiempo.
+
+---
+
+class: middle
+
+# Aplicación: World Development Indicators
+
+.center[![description of the image](images/WDI.jpg)]
+
+.footnote[Fuente: &lt;http://datatopics.worldbank.org/world-development-indicators/&gt;]
+
+---
+
+class: middle
+
+# Aplicación: Precio del bitcoin
+
+
+
+&lt;img src="DatosYVariables_files/figure-html/unnamed-chunk-8-1.gif" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+class: inverse, right, middle
+
+## Experimentos y estudios observacionales son dos fuentes de datos
+
+---
+
+class: middle 
+
+# Experimento aleatorizado controlado
+
+En este tipo de estudios los participantes se asignan de manera aleatoria al grupo de control, que no recibe tratamiento, o al grupo de tratamiento, que sí lo recibe. En dicho experimento, la única razón sistemática para la diferencia en resultados entre los grupos tratamiento y control es el tratamiento.
+
+Los experimentos son diseñados para investigar un efecto causal. Uno de los ejemplos más comunes es el uso de experimentos para evaluar el impacto de un tratamiento que puede ser un programa gubernamental, una vacuna, un medicamento, nivel de luminosidad, etc.
+
+Entre las dificultades prácticas para llevar a cabo experimentos se encuentran: problemas éticos, son caros y la implementación muchas veces no es satisfactoria. Además, no siempre es posible llevar a cabo experimentos. Por ejemplo, no es posible aleatorizar cierto tipo de hábitos como el fumar o alimentarse con una dieta no saludable.
+
+---
+
+class: middle
+
+# Estudios observacionales
+
+En este tipo de estudios los datos son obtenidos mediante la observación del comportamiento real fuera de un marco experimental. Algunos ejemplos incluyen a datos provenientes de encuestas, registros administrativos, transacciones de supermercados, etc.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

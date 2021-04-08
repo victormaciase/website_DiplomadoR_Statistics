@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Medidas de localización, dispersión y distribución</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Víctor Macías E." />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Medidas de localización, dispersión y distribución
+### Víctor Macías E.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+class: middle 
+
+Cuando se explora la distribución de una variable cuantitativa se examinan:
+
+- Medidas de localización
+- Medidas de variabilidad o dispersión
+- Medidas de la forma de la distribución
+
+
+
+---
+
+class: inverse, center, middle
+
+# Medidas de localización
+
+---
+
+class: middle
+
+A continuación analizaremos las siguientes medidas de localización de un conjunto de datos:  
+
+- Media aritmética
+- Mediana
+- Media geométrica
+- Moda
+- Percentiles
+
+---
+
+class: middle
+
+# Media aritmética
+
+`$$\overline x=\frac{\sum_{i=1}^n x_i}{n}$$`
+
+Una desventaja de la media es que un solo valor extremo (atípico) puede cambiar el valor de la media en forma sustancial.
+
+---
+
+class: middle
+
+# Aplicación: Media aritmética de una variable categórica 
+
+Suponga que se tiene la siguiente variable: &lt;b&gt;sexo = 1&lt;/b&gt;, si la persona es mujer y &lt;b&gt;sexo = 0&lt;/b&gt;, si la persona es hombre.
+
+Si la media aritmética de la variable &lt;b&gt;sexo&lt;/b&gt; es `\(0.47\)`, interprete este resultado.
+
+---
+
+class: middle
+
+# Media aritmética ponderada
+
+`$$\overline x_{ponderada}=\frac{\sum_{i=1}^n w_i x_i}{\sum_{i=1}^n w_i}$$`
+
+Note que en la media aritmética simple `\(w_i=1 \hspace{0.2cm}\forall \hspace{0.1cm}i=1,2,...,n\)` y, por lo tanto,
+
+`$$\overline x = \frac{\sum_{i=1}^n 1 \times  x_i}{\sum_{i=1}^n 1}=\frac{\sum_{i=1}^n x_i}{n}$$`
+
+---
+
+class: middle
+
+# Aplicación: Cálculo de costo medio ponderado
+
+La siguiente tabla muestra cinco órdenes de compra realizadas por una empresa del insumo `\(ABC\)`, el costo unitario de cada orden y el número de unidades compradas en cada una. 
+
+Orden de Compra |  Costo unitario ($) | Unidades
+---          |---                  |---
+1            |    300              | 1200
+2            |    340              | 500
+3            |    280              | 2750
+4            |    290              | 1000
+5            |    325              | 800
+
+Calcule el costo medio ponderado
+
+---
+
+class: middle
+
+El tibble que contiene los datos de la tabla es el siguiente:
+
+
+```r
+oc &lt;- tibble::tibble(
+  costo = c(300, 340, 280, 290, 325),
+  unidades = c(1200, 500, 2750, 1000, 800)
+)
+```
+
+El costo medio ponderado es: 
+
+
+```r
+oc %&gt;% summarise(
+  costo_promedio = weighted.mean(costo, w = unidades)) %&gt;% pull()
+```
+
+```
+## [1] 296
+```
+
+
+---
+
+class: middle
+
+# Mediana
+
+La mediana de un conjunto de datos indica el valor intermedio cuando los datos originales se ordenan de forma creciente o decreciente.
+
+- Si el número de valores es impar, la mediana es el número ubicado en la mitad de la lista.
+- Si el número de valores es par, la mediana se obtiene calculando la media de los dos números ubicados en la mitad de la lista.
+
+A diferencia de la media aritmética, la mediana no cambia mucho cuando hay pocos valores extremos.
+
+
+
+---
+
+class: middle
+
+# Media geométrica
+
+`$$\overline x_g=\sqrt[n]{x_1 \times x_2 \times \dots \times x_n}=(x_1 \times x_2 \times \dots \times x_n)^\frac{1}{n}$$`
+
+La media geométrica se usa a menudo cuando se analizan tasas de crecimiento.
+
+
+---
+
+class: middle
+
+# Aplicación: Tasa promedio de retorno de un activo
+
+La tasa de retorno de un activo en el período 1 es -20% y en el período 2 es +20% ¿Cuál es la tasa de retorno promedio?
+
+---
+
+class: middle
+
+# Moda
+
+La moda es el o los valores que se repiten con mayor frecuencia.
+
+Un conjunto de datos puede tener una moda (unimodal), dos modas (bimodal), más de dos modas (multimodal) o no tener ninguna.
+
+---
+
+class: middle
+
+# Percentiles
+
+Para un conjunto de `\(n\)` observaciones, el p-ésimo percentil divide los datos en dos partes: aproximadamente `\(p\%\)` de las observaciones son menores que el p-ésimo percentil y el `\((100-p)\%\)` de las observaciones son más grandes que el p-ésimo percentil. Para el cálculo del p-ésimo percentil, los datos deben ordenarse en orden ascendente.
+
+
+`$$L_p=\frac{p}{100}(n+1)$$`
+
+---
+
+class: middle
+
+### El percentil 25 de una distribución se conoce como primer cuartil
+
+--
+
+### El percentil 50 de una distribución corresponde a la mediana
+
+--
+
+### El percentil 75 de una distribución se conoce como tercer cuartil
+
+---
+
+class: middle
+
+# Aplicación: Cálculo de percentiles
+
+Sea el vector `x` cuyos valores son los siguientes:
+
+
+```r
+x = c(10, 8, 17, 9, 11, 13, 5, 1, 12, 7, 4)
+```
+
+Si se ordenan sus valores en orden ascendente, se obtiene:
+
+
+```r
+sort(x)
+```
+
+```
+##  [1]  1  4  5  7  8  9 10 11 12 13 17
+```
+
+A continuación se presentan los percentiles 20, 40, 50, 60 y 80:
+
+
+```r
+quantile(x, probs = c(0.2, 0.4, 0.5, 0.6, 0.8))
+```
+
+```
+## 20% 40% 50% 60% 80% 
+##   5   8   9  10  12
+```
+
+
+---
+
+class: inverse, center, middle
+
+# Medidas de variabilidad o dispersión
+
+---
+
+class: middle
+
+Para ayudarnos a entender la variabilidad de los datos usaremos las siguientes medidas:
+
+- Rango
+- Rango intercuartil
+- Desviación estándar
+- Varianza
+- Coeficiente de variación
+
+---
+
+class: middle
+
+# Rango
+
+`$$Rango = Valor \hspace{0.1cm} Máximo - Valor \hspace{0.1cm} Mínimo$$`
+
+Dado que el rango sólo utiliza los valores máximo y mínimo, es muy sensible a los valores extremos.
+
+--
+
+# Rango intercuartil
+
+`$$Rango \hspace{0.1cm} intercuartil = Valor \hspace{0.1cm} Percentil \hspace{0.1cm} 75  - Valor \hspace{0.1cm} Percentil \hspace{0.1cm} 25$$`
+
+Esta medida no es afectada por valores extremos.
+
+---
+
+class: middle
+
+# Desviación estándar
+
+La desviación estándar de un conjunto de valores muestrales, expresada por s, es una medida de cuánto se desvían los valores de la media. Mientras mayor es la desviación estándar, mayor es la variabilidad de los datos.
+
+`$$s =\sqrt{\frac{\sum_{i=1}^n (x_i-\overline x)^2}{n-1}}$$`
+
+Las unidades de la desviación estándar `\(s\)` son las mismas que las unidades de los valores de datos originales.
+
+Es una de las medidas de variación más usadas. Sin embargo, debe considerarse que se ve afectada por valores extremos.
+
+&lt;hr&gt;
+&lt;h5&gt;A menudo el `\(68\%\)` de los datos se encuentra al interior de una desviación estándar de la media y aproximadamente `\(95\%\)` se encuentra al interior de dos desviaciones estándar de la media. Sin embargo, estos porcentajes no constituyen una regla estricta.&lt;/h5&gt;
+&lt;hr&gt;
+
+
+---
+
+class: middle
+
+# Varianza
+
+`$$\sigma ^2=\frac{\sum_{i=1}^n (x_i-\overline x)^2}{n-1}$$`
+
+--
+
+# Coeficiente de variación
+
+Muestra cuán grande es la desviación estándar en relación a la media.
+
+`$$Coeficiente \hspace{0.2cm} de \hspace{0.2cm} variación \hspace{0.2cm} = \left(\frac{s}{\overline x} \times 100\right )\%$$`
+
+El coeficiente de variación es un estadístico útil para comparar la dispersión de variables que tienen desviaciones estándar y medias distintas.
+
+---
+
+class: middle
+
+# Aplicación: Cálculo de medidas de dispersión
+
+Sea el vector `x` cuyos valores son los siguientes:
+
+
+```r
+x = c(10, 8, 17, 9, 11, 13, 5, 1, 12, 7, 4)
+```
+
+
+
+```r
+range(x)  # rango
+```
+
+```
+## [1]  1 17
+```
+
+
+```r
+IQR(x)   # rango intercuartil
+```
+
+```
+## [1] 5.5
+```
+
+
+```r
+var(x)   # varianza
+```
+
+```
+## [1] 20.36364
+```
+
+
+```r
+sd(x)   # desviación estándar
+```
+
+```
+## [1] 4.512609
+```
+
+---
+
+class: middle
+
+La desviación estándar también puede ser calculada escribiendo la siguiente fórmula:
+
+`$$s =\sqrt{\frac{\sum_{i=1}^n (x_i-\overline x)^2}{n-1}}$$`
+
+
+```r
+sqrt(sum((x[!is.na(x)] - mean(x, na.rm =TRUE))^2)/(length(x[!is.na(x)])-1))
+```
+
+```
+## [1] 4.512609
+```
+
+Note que la fórmula es general para admitir la presencia de `NA`s!
+
+---
+
+class: middle
+
+# Aplicación: Datos loan50
+
+A continuación se presenta estadística descriptiva de la variable `interest_rate`:
+
+
+```r
+loan50 %&gt;% summarise(
+    n = n(),                           # Número de observaciones
+    mean = mean(interest_rate),          # Media aritmética
+    sd = sd(interest_rate),              # Desviación estándar
+    min = min(interest_rate),            # Mínimo
+    p25 = quantile(interest_rate, 0.25), # Percentil 25 o primer cuartil
+    p50 = median(interest_rate),         # Percentil 50 o segundo cuartil
+    p75 = quantile(interest_rate, 0.75), # Percentil 75 o tercer cuartil
+    max = max(interest_rate)) %&gt;%
+  kbl(digits = 2) %&gt;% kable_styling(bootstrap_options = "striped", font_size = 13)
+```
+
+&lt;table class="table table-striped" style="font-size: 13px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; n &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; mean &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sd &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; min &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p25 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p50 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p75 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; max &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.57 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.93 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.71 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.3 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+class: middle
+
+Otra forma de calcularlo es usando el paquete `skimr`.
+
+
+```r
+loan50 %&gt;% select(interest_rate) %&gt;% 
+  skim() %&gt;% yank("numeric") %&gt;% 
+  select(-c("skim_variable", "n_missing", 
+            "complete_rate", "hist")) %&gt;% kbl(digits = 2) %&gt;%
+  kable_styling(bootstrap_options = "striped", font_size = 13)
+```
+
+&lt;table class="table table-striped" style="font-size: 13px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; mean &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sd &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p0 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p25 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p50 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p75 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p100 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 11.57 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.93 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.71 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.3 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+
+class: middle
+
+# Aplicación: Peso recién nacido en gramos o kilos
+
+A continuación se calculará el coeficiente de variación del peso medido en gramos y kilos. Note que la desviación estándar es mayor para el peso medido en gramos.
+
+
+```r
+tibble::tibble(peso_gr = c(2800, 3200, 3800, 2900, 3500),  # peso en gramos
+               peso_kg = peso_gr/1000) %&gt;%                 # peso en kilos
+  summarise(mean_gr = mean(peso_gr), sd_gr = sd(peso_gr),  # media y sd peso en gramos
+            mean_kg = mean(peso_kg), sd_kg = sd(peso_kg),  # media y sd peso en kilos
+            coefvar_gr = 100*sd_gr/mean_gr,  # coef. variación peso en gramos 
+            coefvar_kg = 100*sd_kg/mean_kg)  # coef. variación peso en kilos
+```
+
+```
+## # A tibble: 1 x 6
+##   mean_gr sd_gr mean_kg sd_kg coefvar_gr coefvar_kg
+##     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1    3240  416.    3.24 0.416       12.8       12.8
+```
+
+
+---
+
+class: middle
+
+### A menudo se presentan los siguientes cinco números para resumir los datos: valor mínimo, percentil 25, mediana, percentil 75 y valor máximo
+
+--
+
+### También se acostumbra reportar la media aritmética, desviación estándar, número de observaciones y número de datos faltantes (missing values)
+
+
+---
+
+class: middle
+
+# Outliers
+
+Un outlier es un valor observado que es muy grande o muy pequeño en relación a otros en los datos.
+
+La definición Tukey de un outlier corresponde a un valor que cae fuera del siguiente intervalo:
+
+`$$[Q_1-1,5(Q_3 - Q_1),Q_3+1,5(Q_3 - Q_1)]$$`
+
+donde `\(Q_1\)` y `\(Q_3\)` son los valores del primer y tercer cuartil.
+
+---
+
+class: middle
+
+# Aplicación: Diagrama de caja y outliers
+
+
+
+```r
+loan50 %&gt;% ggplot(aes(x = interest_rate)) + 
+  geom_boxplot(colour = "#636363", fill = "#3fa3ab") +
+  labs(x = "Tasa de interés") +
+  scale_x_continuous(breaks = seq(0, 30, 5), labels = scales::percent_format(scale = 1, accuracy = 1), limits = c(0, 30)) +
+  theme(panel.background = element_blank(), axis.title.y = element_blank(),
+        axis.text.y  = element_blank(), axis.ticks.y = element_blank(),
+        axis.line = element_line(size = 0.3, color = "#AD9F9F"))
+```
+
+&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+Las 5 observaciones con las menores tasas de interés son:
+
+
+```r
+loan50 %&gt;% select(interest_rate) %&gt;% slice_min(interest_rate, n = 5)
+```
+
+```
+## # A tibble: 6 x 1
+##   interest_rate
+##           &lt;dbl&gt;
+## 1          5.31
+## 2          5.31
+## 3          5.32
+## 4          6.08
+## 5          6.08
+## 6          6.08
+```
+
+Las 5 observaciones con las mayores tasas de interés son:
+
+
+```r
+loan50 %&gt;% select(interest_rate) %&gt;% slice_max(interest_rate, n = 5) 
+```
+
+```
+## # A tibble: 5 x 1
+##   interest_rate
+##           &lt;dbl&gt;
+## 1          26.3
+## 2          24.8
+## 3          21.4
+## 4          20  
+## 5          19.4
+```
+
+
+---
+
+class: middle
+
+A continuación se presentan las 50 observaciones representadas por puntos de color rojo:
+
+
+```r
+loan50 %&gt;% ggplot(aes(x = interest_rate, y = 1)) +
+  geom_boxplot(colour = "#636363", fill = "#3fa3ab", outlier.shape = NA) +
+  geom_jitter(colour = "#960012", alpha = 0.6) + 
+  labs(x = "Tasa de interés") +
+  scale_x_continuous(breaks = seq(0, 30, 5), labels = scales::percent_format(scale = 1, accuracy = 1), limits = c(0, 30)) +
+  theme(panel.background = element_blank(), axis.title.y = element_blank(),
+        axis.text.y  = element_blank(), axis.ticks.y = element_blank(),
+        axis.line.x = element_line(size = 0.3, color = "#AD9F9F"))
+```
+
+&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+# Estadísticos robustos
+
+Son aquellos cuyos valores cambian muy poco en la presencia de observaciones extremas. 
+
+--
+
+#### La mediana y el rango intercuartil son estadísticos robustos
+
+--
+
+#### La media aritmética y la desviación estándar no son estadísticos robustos, ya que sus valores pueden ser muy influenciados por observaciones extremas
+
+---
+
+class: inverse, center, middle
+
+# Medidas de la forma de la distribución
+
+
+---
+
+class: bottom, right
+
+## La distribución de valores de variables categóricas no se representan visualmente usando un histograma, sino un gráfico de barras. Otra forma que se usa a menudo para mostrar la distribución de una variable categórica es una tabla de frecuencias
+
+
+---
+
+class: middle
+
+A continuación se presentarán las siguientes medidas de la forma de una distribución de los datos de una variable cuantitativa:  
+
+- Skewness
+- Curtosis
+
+---
+
+class: middle
+
+# Asimetría (skewness)
+
+Mide la falta de simetría de una distribución. 
+
+&lt;b&gt;Toma el valor cero, si la distribución es simétrica, un valor mayor a cero si el sesgo es positivo y un valor menor a cero, si el sesgo es negativo.&lt;/b&gt; 
+
+La asimetría no tiene unidades y no varía al cambiar las unidades de medición de la variable aleatoria.
+
+`$$skewness=\frac{\frac{\sum_{i=1}^n (x_i - \overline x)^3}{n}}{\left[\frac{\sum_{i=1}^n (x_i - \overline x)^2}{n}\right]^{\frac{3}{2}}}$$`
+
+---
+
+class: middle
+
+### Si la distribución es simétrica, entonces la media aritmética y la mediana son iguales
+
+--
+
+### Si la distribución es sesgada a la derecha, entonces la media aritmética será mayor que la mediana
+
+--
+
+### Si la distribución es sesgada a la izquierda, entonces la media aritmética será menor que la mediana
+
+---
+
+class: middle
+
+# Curtosis
+
+Mide el grosor o peso de las colas de la distribución. 
+
+La curtosis de una variable aleatoria que se distribuye normalmente es 3. La distribución de una variable aleatoria con una curtosis mayor que 3 tiene colas más gruesas que una variable aleatoria normal y se denomina &lt;b&gt;leptocúrtica&lt;/b&gt;. En el caso que la curtosis sea menor a 3, la distribución se denomina &lt;b&gt;platicúrtica&lt;/b&gt; y si es igual a 3, se llama &lt;b&gt;mesocúrtica&lt;/b&gt;. 
+
+La curtosis  no tiene unidades y no varía al cambiar las unidades de medición de la variable aleatoria.
+
+`$$curtosis=\frac{\frac{\sum_{i=1}^n (x_i - \overline x)^4}{n}}{\left[\frac{\sum_{i=1}^n (x_i - \overline x)^2}{n}\right]^2}$$`
+
+---
+
+class: middle
+
+# Aplicación: Datos de loan50
+
+
+```r
+library(moments)
+```
+
+
+
+```r
+loan50 %&gt;% summarise(sesgo = skewness(interest_rate),
+                     curtosis = kurtosis(interest_rate))
+```
+
+```
+## # A tibble: 1 x 2
+##   sesgo curtosis
+##   &lt;dbl&gt;    &lt;dbl&gt;
+## 1  1.10     3.65
+```
+
+
+---
+
+class: inverse, center, middle
+
+# Relación entre dos variables cuantitativas
+
+---
+
+class: middle
+
+
+- Covarianza
+- Correlación
+
+---
+
+class: middle
+
+# Covarianza
+
+`$$s_{xy} = \frac{\sum_{i=1}^n(x_i-\overline x)(y_i-\overline y)}{n-1}$$`
+
+--
+
+# Coeficiente de correlación
+
+La correlación es una medida del grado y dirección de una asociación lineal entre dos variables cuantitativas: 
+
+`$$r_{xy} =\frac{1}{n}\sum_{i=1}^n\left(\frac{x_i-\overline x}{s_x}\right )\left(\frac{y_i-\overline y}{s_y}\right )= \frac{s_{xy}}{s_x s_y}$$`
+
+donde `\(-1 \leq r_{xy} \leq 1\)`
+
+---
+
+class: middle
+
+# Aplicación: Datos de loan50
+
+A continuación se muestra la matriz de correlación de las variables `loan_amount`, `interest_rate` y `total_income`:
+
+
+```r
+loan50 %&gt;% select(loan_amount, interest_rate, total_income) %&gt;% 
+  cor() %&gt;% kbl(digits = 2) %&gt;% 
+  kable_styling(bootstrap_options = "striped", font_size = 13)
+```
+
+&lt;table class="table table-striped" style="font-size: 13px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; loan_amount &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; interest_rate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; total_income &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; loan_amount &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.54 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; interest_rate &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.16 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; total_income &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.54 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.16 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+
+class: middle
+
+# Aplicación: Datos de Anscombe
+
+
+
+&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+&lt;code&gt;Fuente: Anscombe, F.J. 1973. Graphs in Statistical Analysis. The American Statistician, Vol. 27, No. 1., pp. 17-21.&lt;/code&gt;
+
+---
+
+class: middle
+
+# Aplicación: Datasaurus
+
+Los siguientes gráficos fueron construidos a partir de datos que se encuentran disponibles en el paquete *datasauRus*.
+
+
+
+
+&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-27-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+ 
+
+
+La correlación entre las variables `\(x\)` e `\(y\)` en ambos conjuntos de datos es `\(-0.06\)`
+
+---
+
+class: bottom, right
+
+## El coeficiente de correlación no es siempre un buen resumen de la relación entre dos variables
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

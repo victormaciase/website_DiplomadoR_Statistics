@@ -1,0 +1,67 @@
+---
+title: "Datos faltantes"
+author: "Víctor Macías E."
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r message = FALSE}
+library(dplyr)
+library(tibble)
+```
+
+
+Son aquellos que no constan debido a cualquier acontecimiento, 
+
+- errores en la transcripción de los datos
+- el encuestado puede decidir no responder ciertas preguntas 
+
+---
+
+class: middle
+
+- Reducción en la precisión con la cual los parámetros de interés pueden ser estimados
+- Introducir sesgo y, por lo tanto, llevar a inferencias erróneas de los parámetros de interés
+
+---
+
+class: middle
+
+Los datos pueden faltar de manera aleatoria o no aleatoria
+
+Si los datos faltantes son aleatorios, el tamaño muestral disminuye y también la potencia de las pruebas de contraste de hipótesis
+
+Si los datos faltantes son no aleatorios se puede afectar negativamente la representatividad de la muestra
+
+
+---
+
+class: middle
+
+# Eliminación de observaciones con información incompleta
+
+Sólo se incluyen las observaciones con información completa en todas sus variables. 
+
+# Selección por variables
+
+Se incluyen observaciones con información completa en las variables seleccionadas para el análisis
+
+# Imputación
+
+Estimar los datos faltantes usando valores de otras variables y/o casos de la muestra.
+
+
+---
+
+class: middle
+
+# Imputación de la media de la variable

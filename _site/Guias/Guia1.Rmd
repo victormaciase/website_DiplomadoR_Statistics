@@ -4,7 +4,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
 
@@ -14,6 +14,7 @@ library(ggplot2)
 library(forcats)
 library(janitor)
 library(haven)
+library(kableExtra)
 ```
 
 ```{r}
@@ -21,9 +22,59 @@ data(loan50, package = "openintro")
 ```
 
 
+# Pregunta 1
+
+¿Cuántas observaciones tiene `loan50`? ¿Cuántas variables son cuantitativas? ¿Cuántas variables son categóricas nominales y ordinales?  
+
 ```{r}
 glimpse(loan50)
 ```
+
+# Pregunta 2
+
+Construya una tabla de frecuencias, frecuencia relativa y frecuencia porcentual para la variable `homeownership`
+
+```{r}
+loan50 %>%
+  group_by(homeownership) %>%
+  tally(sort = TRUE) %>% 
+  mutate(frec_relativa = n/sum(n), frec_porcentual = frec_relativa*100) %>%
+  kbl() %>%
+  kable_styling(bootstrap_options = "striped", font_size = 12)
+```
+
+# Pregunta 3
+
+Construya una tabla cruzada de frecuencias que muestre la relación entre las variables `loan_status` y `homeownership`. 
+
+```{r}
+loan50 %>% tabyl(loan_status, homeownership) %>% adorn_totals(c("row", "col")) %>%
+  adorn_title("combined") %>% kbl() %>% kable_styling(bootstrap_options = "striped", font_size = 12)
+```
+
+# Pregunta 4
+
+Presente una tabla con estadística descriptiva para la variable `interest_rate`.
+
+```{r}
+loan50 %>% summarise(
+    n = n(),                           # Número de observaciones
+    mean = mean(interest_rate),          # Media aritmética
+    sd = sd(interest_rate),              # Desviación estándar
+    min = min(interest_rate),            # Mínimo
+    p25 = quantile(interest_rate, 0.25), # Percentil 25 o primer cuartil
+    p50 = median(interest_rate),         # Percentil 50 o segundo cuartil
+    p75 = quantile(interest_rate, 0.75), # Percentil 75 o tercer cuartil
+    max = max(interest_rate)) %>%
+  kbl(digits = 2) %>% kable_styling(bootstrap_options = "striped", font_size = 13)
+```
+
+# Pregunta 3
+
+Construya una matriz de correlaciones entre las variables
+
+
+# Pregunta
 
 ```{r}
 loan50 %>% pull(loan_purpose) %>% levels()

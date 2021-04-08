@@ -60,11 +60,11 @@ Todas las funciones incluidas en este paquete comienzan con `fct_`. Entre las fu
 Función | Descripción 
 ---- |-------
 fct_reorder() | reordena un factor por otra variable
-fct_recode()  | cambia los valores de los niveles
+fct_recode()  | cambia los valores de los levels
 fct_infreq()  | reordena un factor por la frecuencia de sus valores
 fct_relevel() | cambia manualmente el orden de un factor
 fct_lump()    | colapsa los valores menos/más frecuentes de un factor en la categoría "other"
-fct_rev()     | dfdgdh
+fct_rev()     | revierte el orden de los levels
 
 
 

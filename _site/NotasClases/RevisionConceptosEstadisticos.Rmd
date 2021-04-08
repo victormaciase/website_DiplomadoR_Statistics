@@ -1,0 +1,1718 @@
+---
+title: "Revisión de conceptos estadísticos"
+author: "Víctor Macías E."
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+library(tidyr)
+library(tidymodels)
+library(datasauRus)
+library(kableExtra)
+library(HistData)
+library(openintro)
+library(DT)
+library(tidyquant)
+```
+
+
+
+```{r echo=FALSE}
+data("GaltonFamilies")
+
+son_data <- GaltonFamilies %>% filter(gender == "male")
+```
+
+
+class: middle
+
+# Contenido
+
+- Variables
+- Descripción de datos
+- Tipos y fuentes de datos
+- Población y muestra
+- Intervalos de confianza
+- Test de hipótesis
+- Distribución normal
+
+---
+class: inverse, right, middle
+
+## Estadística es la ciencia y arte de recolectar, organizar, describir y analizar datos con el propósito de convertir los datos en conocimiento y entender el mundo a nuestro alrededor
+
+---
+class: inverse, right, middle
+
+## En resumen, estadística es el arte y la ciencia de aprender de los datos
+
+---
+
+class: middle
+
+# Estadística descriptiva e inferencial
+
+## Estadística descriptiva
+
+Se refiere a los métodos usados para organizar, presentar y resumir los datos. 
+
+## Estadística inferencial
+
+Se refiere a los métodos usados para obtener conclusiones relativas a una población a partir de una muestra. 
+
+---
+class: bottom, right
+
+## Datos son números en contexto 
+
+---
+class: bottom, right
+
+## Una fotografía, un archivo de audio o un tweet son también datos 
+
+---
+class: inverse, right, middle
+
+## Estadística es el estudio de la variación en los datos
+
+---
+
+class: middle
+
+# Cólera en Londres (1855)
+
+.center[![description of the image](images/cholera_street.jpg)]
+
+Ver <https://commons.wikimedia.org/wiki/File:Snow-cholera-map-1.jpg>
+
+---
+
+class: middle
+
+# La rosa de Nightingale
+
+.center[![description of the image](images/NightingaleMortality.jpg)]
+
+Ver <https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg>
+
+---
+
+class: right, bottom
+
+## ¿Cuál es el patrón de variación de un atributo en los datos?
+
+---
+
+class: bottom, right
+
+## Tomar decisiones basadas en datos conlleva el desarrollo de una ventaja competitiva
+
+---
+
+class: middle
+
+# Aplicación: Préstamos en Lending Club
+
+A continuación se presentan las primeras 8 observaciones y 7 variables del dataset *loan50*.
+
+```{r echo = FALSE}
+data("loan50")
+```
+
+```{r echo = FALSE}
+loan50_1 <- loan50 %>% select(loan_amount, interest_rate, term, grade, state, total_income, homeownership)
+```
+
+
+```{r echo = FALSE}
+head(loan50_1, 8) %>% 
+  kbl(format = 'html')
+```
+
+Se recomienda revisar <https://www.lendingclub.com/> para mayor información.
+
+---
+
+class: bottom, right
+
+## Conocer el significado de cada variable y su unidad de medición es crucial para entender las posibles implicaciones obtenidas del análisis de los datos
+
+---
+
+class: middle
+
+# Descripción de variables
+
+```{r echo = FALSE}
+tibble::tibble(
+  `Variable` = c('loan_amount', 'interest_rate', 'term', 'grade', 'state', 'total_income', 'homeownership'),
+  `Descripción` = c("Monto del préstamo recibido (en dólares)",
+                    "Tasa de interés del préstamo (% anual)",
+                    "Plazo del préstamo (número de meses)",
+                    "Calidad del préstamo y probabilidad de repago. Toma valores de A a G",
+                    "Estado de Estados Unidos donde el prestatario reside",
+                    "Ingreso total del prestatario (en dólares)",
+                    "Indica si la persona es dueña, dueña pagando un crédito hipotecario o arrienda")
+                    
+  ) %>%
+    kbl(format = 'html')
+
+```
+
+
+---
+class: inverse, center, middle
+
+# Tipos de variables
+
+---
+
+Una variable es un atributo o característica observada y puede ser numérica o categórica.
+
+## Numéricas
+
+Una variable es numérica si toma valores numéricos que representan diferentes magnitudes de la variable. Estos valores pueden sumarse, multiplicarse, promediarse, etc.
+
+<hr>
+<h5 style="background-color:#E2F0FD;">Una variable como es el código telefónico no es numérica, aún cuando tome valores numéricos.</h5>
+<hr>
+
+
+## Categóricas
+
+Una variable es categórica si cada observación pertenece a una de distintas categorías o niveles. 
+
+---
+
+class: middle
+
+# Variables numéricas
+
+Una variable numérica puede ser discreta o continua.
+
+## Discreta
+
+Una variable es discreta si el número de valores que toma es un conjunto finito como, por ejemplo, 0, 1, 2, 3, 4...
+
+## Continua
+
+Una variable es continua si toma un número infinito de valores posibles.
+
+---
+
+class: middle
+
+# Variables categóricas
+
+Una variable categórica puede ser nominal u ordinal.
+
+## Nominal
+Una variable es nominal cuando las categorías no tienen un orden.
+
+## Ordinal
+Una variable es ordinal cuando las categorías tienen un orden.
+
+---
+
+class: middle
+
+# Aplicación: Tipos de variables en `loan50`
+
+Para cada una de las variables en `loan50` identifique su tipo.
+
+```{r echo = FALSE}
+tibble::tibble(
+  `Variable` = c('loan_amount', 'interest_rate', 'term', 'grade', 'state', 'total_income', 'homeownership'),
+  `Tipo de variable` = c("?",
+             "     ?",
+             "     ?",
+             "     ?",
+             "     ?",
+             "     ?",
+             "     ?")) %>%
+    kbl(format = 'html')
+
+```
+
+---
+
+class: inverse, center, middle
+
+# Distribución de los datos
+
+---
+
+class: bottom, right
+
+## Se entiende por *distribución* el patrón de variación de una variable o conjunto de éstas
+
+
+---
+
+class: bottom, right
+
+## El análisis de la distribución dependerá si la variable es numérica o categórica
+
+
+---
+
+class: middle 
+
+Cuando se explora la distribución de una variable numérica se examinan:
+
+- Medidas de localización
+- Medidas de variabilidad
+- Medidas de la forma de la distribución
+
+Varias medidas comúnmente aplicadas a variables numéricas no tiene sentido su uso en variables categóricas, ya que su naturaleza es distinta. 
+
+
+---
+
+class: bottom, right
+
+## Cuando se analiza la distribución de una variable, se estudia su simetría, si es unimodal o multimodal, cuánta variabilidad presenta, su centro y la existencia de outliers, entre otros elementos
+
+
+---
+
+class: middle
+
+# Aplicación: Estatura de hijos y padres
+
+A continuación trabajaremos con datos de 934 hijos de 205 familias que fueron usadas por Galton en 1886 [1].
+
+.footnote[
+[1] Los datos se encuentran disponibles en el paquete *HistData*.
+]
+
+```{r echo = FALSE}
+p <- theme(panel.background = element_blank(),
+        plot.title = element_text(size = 14, color = "#636363"),
+        plot.subtitle = element_text(size = 12, color = "#AD9F9F"),
+        axis.ticks = element_line(color = "#AD9F9F"),
+        axis.text = element_text(size = 11, color = "#AD9F9F"),
+        axis.title = element_text(size = 11, color = "#AD9F9F"),
+        axis.line = element_line(size = 0.3, color = "#AD9F9F"))
+
+```
+
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+GaltonFamilies %>% ggplot(aes(x = childHeight)) + 
+  geom_histogram(bins = 13, colour = "#636363", fill = "#3fa3ab") + 
+  scale_y_continuous(expand= c(0,0)) +
+  labs(title = "Distribución de estatura de hijos",
+       x= "Estatura (en pulgadas)",
+       y = "Frecuencia") +
+  p
+```
+
+---
+
+class: inverse, center, middle
+
+# Medidas de localización
+
+---
+
+class: middle
+
+A continuación analizaremos las siguientes medidas de localización de un conjunto de datos:  
+
+- Media aritmética
+- Mediana
+- Media geométrica
+- Moda
+- Percentiles
+
+---
+
+class: middle
+
+# Media aritmética
+
+$$\overline x=\frac{\sum_{i=1}^n x_i}{n}$$
+
+Una desventaja de la media es que un solo valor extremo (atípico) puede cambiar el valor de la media en forma sustancial.
+
+---
+
+class: middle
+
+# Aplicación: Media aritmética de una variable categórica 
+
+Suponga que se tiene la siguiente variable: <b>sexo = 1</b>, si la persona es mujer y <b>sexo = 0</b>, si la persona es hombre.
+
+Si la media aritmética de la variable <b>sexo</b> es $0.47$, interprete este resultado.
+
+---
+
+class: middle
+
+# Mediana
+
+La mediana de un conjunto de datos indica el valor intermedio cuando los datos originales se ordenan de forma creciente o decreciente.
+
+- Si el número de valores es impar, la mediana es el número ubicado en la mitad de la lista.
+- Si el número de valores es par, la mediana se obtiene calculando la media de los dos números ubicados en la mitad de la lista.
+
+La mediana es también conocida como el percentil 50 de una distribución.
+
+A diferencia de la media aritmética, la mediana no cambia mucho cuando hay pocos valores extremos.
+
+.footnote[
+[2] El p-ésimo percentil es el valor de una variable cuantitativa por debajo del cual se ubica el $p\%$ de los datos. Para el cálculo de percentiles, los datos deben estar ordenados de menor a mayor.
+]
+
+---
+
+class: middle
+
+# Media geométrica
+
+$$\overline x_g=\sqrt[n]{x_1 \times x_2 \times \dots \times x_n}=(x_1 \times x_2 \times \dots \times x_n)^\frac{1}{n}$$
+
+La media geométrica se usa a menudo cuando se analizan tasas de crecimiento.
+
+
+---
+
+class: middle
+
+# Aplicación: Tasa promedio de retorno de un activo
+
+La tasa de retorno de un activo en el período 1 es -20% y en el período 2 es +20% ¿Cuál es la tasa de retorno promedio?
+
+---
+
+class: middle
+
+# Moda
+
+La moda es el o los valores que se repiten con mayor frecuencia.
+
+Un conjunto de datos puede tener una moda (unimodal), dos modas (bimodal) o múltiples modas (multimodal) o no tener ninguna.
+
+---
+
+class: middle
+
+# Percentiles
+
+Para un conjunto de $n$ observaciones, el p-ésimo percentil divide los datos en dos partes: aproximadamente $p\%$ de las observaciones son menores que el p-ésimo percentil y el $(100-p)\%$ de las observaciones son más grandes que el p-ésimo percentil. Para el cálculo del p-ésimo percentil, los datos deben ordenarse en orden ascendente.
+
+
+$$L_p=\frac{p}{100}(n+1)$$
+---
+
+class: inverse, center, middle
+
+# Medidas de variabilidad o dispersión
+
+---
+
+class: middle
+
+Para ayudarnos a entender la variabilidad de los datos usaremos las siguientes medidas:
+
+- Rango
+- Rango intercuartil
+- Desviación estándar
+- Varianza
+- Coeficiente de variación
+
+---
+
+class: middle
+
+# Rango
+
+$$Rango = Valor \hspace{0.1cm} Máximo - Valor \hspace{0.1cm} Mínimo$$
+
+Dado que el rango sólo utiliza los valores máximo y mínimo, es muy sensible a los valores extremos.
+
+# Rango intercuartil
+
+$$Rango \hspace{0.1cm} intercuartil = Valor \hspace{0.1cm} Percentil \hspace{0.1cm} 75  - Valor \hspace{0.1cm} Percentil \hspace{0.1cm} 25$$
+
+Esta medida no es afectada por valores extremos.
+
+---
+
+class: middle
+
+# Desviación estándar
+
+La desviación estándar de un conjunto de valores muestrales, expresada por s, es una
+medida de cuánto se desvían los valores de la media. Mientras mayor es la desviación estándar, mayor es la variabilidad de los datos.
+
+$$s =\sqrt{\frac{\sum_{i=1}^n (x_i-\overline x)^2}{n-1}}$$
+
+Las unidades de la desviación estándar $s$ son las mismas que las unidades de los valores de datos originales.
+
+Es una de las medidas de variación más usadas. Sin embargo, debe considerarse que se ve afectada por valores extremos.
+
+# Varianza
+
+
+$$\sigma ^2=\frac{\sum_{i=1}^n (x_i-\overline x)^2}{n-1}$$
+
+---
+
+class: middle
+
+# Coeficiente de variación
+
+Muestra cuán grande es la desviación estándar en relación a la media.
+
+$$Coeficiente \hspace{0.2cm} de \hspace{0.2cm} variación \hspace{0.2cm} = (\frac{\sigma_x}{\overline x} \times 100)\%$$
+
+El coeficiente de variación es un estadístico útil para comparar la variabilidad de variables que tienen desviaciones estándar y medias distintas.
+
+---
+
+class: inverse, center, middle
+
+# Medidas de la forma de la distribución
+
+---
+
+class: middle
+
+Gráficamente, un histograma o la densidad permiten visualizar la forma de la distribución:
+
+.center[![description of the image](images/asimetria_simetria.jpg)]
+
+- Si la distribución es simétrica, entonces la media aritmética y la mediana son iguales.
+
+- Si la distribución es asimétrica positiva, entonces la media aritmética será mayor que la mediana.
+
+- Si la distribución es asimétrica negativa, entonces la media aritmética será menor que la mediana.
+
+---
+
+class: bottom, right
+
+## La distribución de valores de variables categóricas no se representan visualmente usando un histograma, sino un gráfico de barras. Otra forma que se usa a menudo para mostrar la distribución de una variable categórica es una tabla de frecuencias
+
+
+---
+
+class: middle
+
+A continuación se presentarán las siguientes medidas de la forma de una ditribución:  
+
+- Skewness
+- Curtosis
+
+---
+
+class: middle
+
+# Asimetría (skewness)
+
+Mide la falta de simetría de una distribución. Toma el valor cero, si la distribución es simétrica, un valor mayor a cero si el sesgo es positivo y un valor menor a cero, si el sesgo es negativo. La asimetría no tiene unidades y no varía al cambiar las unidades de medición de la variable aleatoria.
+
+$$skewness=\frac{\frac{\sum_{i=1}^n (x_i - \overline x)^3}{n}}{\left[\frac{\sum_{i=1}^n (x_i - \overline x)^2}{n}\right]^{\frac{3}{2}}}$$
+
+---
+
+class: middle
+
+# Curtosis
+
+Mide el grosor o peso de las colas de la distribución. La curtosis de una variable aleatoria que se distribuye normalmente es 3. La distribución de una variable aleatoria con una curtosis mayor que 3 tiene colas más gruesas que una variable aleatoria normal y se denomina leptocúrtica. En el caso que la curtosis sea menor a 3, la distribución se denomina platicúrtica y si es igual a 3, se llama mesocúrtica. La curtosis  no tiene unidades y no varía al cambiar las unidades de medición de la variable aleatoria.
+
+$$curtosis=\frac{\frac{\sum_{i=1}^n (x_i - \overline x)^4}{n}}{\left[\frac{\sum_{i=1}^n (x_i - \overline x)^2}{n}\right]^2}$$
+
+
+---
+
+class: inverse, center, middle
+
+# Resumen de cinco números 
+
+---
+
+class: middle
+
+A menundo se presentan los siguientes cinco números para resumir los datos: 
+
+- Valor mínimo
+- Primer cuartil o percentil 25
+- Mediana o percentil 50
+- Tercer cuartil o percentil 75
+- Valor máximo
+
+Además, se acostumbra reportar la media aritmética, desviación estándar, número de valores y el número de datos faltantes (missing values).
+
+
+---
+
+class: middle
+
+# Aplicación: Estatura de hijos
+
+Usando los datos de Galton (1886) que fueron presentados anteriormente en un histograma, a continuación se presenta la estadística descriptiva para la estatura de los hijos, separada para hombres y mujeres:
+
+```{r echo = FALSE}
+galton_summ <- GaltonFamilies %>% 
+  group_by(gender) %>%
+  summarize(
+    n = n(),
+    mean = mean(childHeight),
+    sd = sd(childHeight),
+    min = min(childHeight),
+    p25 = quantile(childHeight, 0.25),
+    p50 = median(childHeight),
+    p75 = quantile(childHeight, 0.75),
+    max = max(childHeight)
+  )
+galton_summ %>% knitr::kable(digits = 2, booktabs = T) %>% 
+  kableExtra::kable_styling()
+```
+
+---
+
+class: middle
+
+# Outliers
+
+Un outlier es un valor observado que es muy grande o muy pequeño en relación a otros en los datos.
+
+La definición Tukey de un outlier corresponde a un valor que cae fuera del siguiente intervalo:
+
+$$[Q_1-1,5(Q_3 - Q_1),Q_3+1,5(Q_3 - Q_1)]$$
+
+donde $Q_1$ y $Q_3$ son los valores del primer y tercer cuartil.
+
+---
+
+class: middle
+
+# Aplicación: Identificación de outliers
+
+Usando un diagrama de caja (boxplot) represente los cinco número resumen para la altura de hijos e hijas y aplique la definición de Tukey e identifique los outliers en el gráfico que se presenta a continuación:
+
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+GaltonFamilies %>% ggplot(aes(x = gender, y = childHeight)) + 
+  geom_boxplot(colour = "#636363", fill = "#3fa3ab") + 
+  labs(title = "Distribución de estatura de hijos",
+       x= "",
+       y = "Estatura (en pulgadas)") +
+  p +
+  coord_flip()
+```
+
+---
+
+class: middle
+
+# Estadísticos robustos
+
+Son aquellos cuyos valores cambian muy poco en la presencia de observaciones extremas. 
+
+La mediana y el rango intercuartil son estadísticos robustos.
+
+La media aritmética y la desviación estándar no son estadísticos robustos, ya que sus valores pueden ser muy influenciados por observaciones extremas.
+
+
+---
+
+class: inverse, center, middle
+
+# Relación entre dos variables cuantitativas
+
+---
+
+class: middle
+
+
+- Covarianza
+- Correlación
+
+---
+
+class: middle
+
+# Covarianza
+
+$$s_{xy} = \frac{\sum_{i=1}^n(x_i-\overline x)(y_i-\overline y)}{n-1}$$
+
+# Coeficiente de correlación
+
+La correlación es una medida del grado y dirección de una asociación lineal entre dos variables cuantitativas: 
+
+$$r_{xy} = \frac{s_{xy}}{s_x s_y}$$
+
+donde $-1 \leq r_{xy} \leq 1$
+
+---
+
+class: middle
+
+# Aplicación: Estatura de padres e hijos
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618, warning = FALSE, message=FALSE}
+son_data %>% ggplot(aes(x=father, y = childHeight)) +
+  geom_point(colour = "#027e88", alpha = 0.5) +
+  geom_smooth(method = "lm", size = 0.5, color = "#636363", se = FALSE) +
+  labs(x = "Estatura de padre",
+       y = "Estatura de hijo") +
+  p
+```
+
+El coeficiente de correlación entre la estatura del padre y del hijo es `r son_data %>% summarize(r = round(cor(father, childHeight),2)) %>% pull(r)`.
+
+---
+
+class: middle
+
+# Aplicación: Relación entre variables en `loan50`
+
+El siguiente gráfico muestra la relación entre el ingreso total del prestatario y el monto del préstamo.
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618, warning = FALSE, message=FALSE}
+loan50 %>% ggplot(aes(x=total_income, y = loan_amount)) +
+  geom_point(colour = "#027e88", alpha = 0.5) +
+  geom_smooth(method = "lm", size = 0.5, color = "#636363", se = FALSE) +
+  scale_x_continuous(label = scales::label_number()) +
+  scale_y_continuous(label = scales::label_number()) +
+  labs(x = "Ingreso total",
+       y = "Monto del préstamo") +
+  p
+```
+
+---
+
+class: middle
+
+# Aplicación: Datos de Anscombe
+
+```{r echo = FALSE}
+anscombe <- haven::read_dta("datos/anscombe.dta")
+```
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+g1 <- anscombe %>% ggplot(aes(x=x1, y=y1)) + 
+  geom_smooth(method = "lm", se=FALSE, color="#636363", size = 0.5, formula = y ~ x) +
+  geom_point(color="#3fa3ab") + 
+  labs(subtitle = "Correlación = 0.816") +
+  p
+g2 <- anscombe %>% ggplot(aes(x=x2, y=y2)) + 
+  geom_smooth(method = "lm", se=FALSE, color="#636363", size = 0.5, formula = y ~ x) +
+  geom_point(color="#3fa3ab") + 
+  labs(subtitle = "Correlación = 0.816") +
+  p
+g3 <- anscombe %>% ggplot(aes(x=x3, y=y3)) + 
+  geom_smooth(method = "lm", se=FALSE, color="#636363", size = 0.5, formula = y ~ x) +
+  geom_point(color="#3fa3ab") + 
+  labs(subtitle = "Correlación = 0.816") +
+  p
+g4 <- anscombe %>% ggplot(aes(x=x4, y=y4)) + 
+  geom_smooth(method = "lm", se=FALSE, color="#636363", size = 0.5, formula = y ~ x) +
+  geom_point(color="#3fa3ab") + 
+  labs(subtitle = "Correlación = 0.816") +
+  p
+gridExtra::grid.arrange(g1, g2, g3, g4, nrow=2, ncol=2)
+
+```
+
+.footnote[
+[3] Fuente: Anscombe, F.J. 1973. Graphs in Statistical Analysis. The American Statistician, Vol. 27, No. 1., pp. 17-21.]
+
+---
+
+class: middle
+
+# Aplicación: Datasaurus
+
+Los siguientes gráficos fueron construidos a partir de datos que se encuentran disponibles en el paquete *datasauRus*.
+
+```{r echo = FALSE}
+library(datasauRus)
+data(datasaurus_dozen)
+```
+
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+g1 <- datasaurus_dozen %>%  filter(dataset == "star") %>% 
+  ggplot(aes(x=x, y=y, colour=dataset))+
+  geom_point(colour = "#3fa3ab")+
+  scale_x_continuous(limits = c(20, 100), breaks = seq(0,100,20), labels = seq(0, 100,20)) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0,100,25), labels = seq(0, 100,25)) +
+  p +
+  theme(legend.position = "none", 
+        aspect.ratio = 1)
+    
+
+g2 <- datasaurus_dozen %>%  filter(dataset == "dino") %>% 
+  ggplot(aes(x=x, y=y, colour=dataset))+
+  geom_point(colour = "#3fa3ab")+
+  p +
+  theme(legend.position = "none",
+        aspect.ratio = 1)
+    
+gridExtra::grid.arrange(g1, g2, ncol = 2)
+```
+
+ 
+```{r eval=FALSE, echo = FALSE}
+datasaurus_dozen %>% filter(dataset %in% c("dino", "star")) %>% arrange(desc(dataset))  %>% group_by(dataset) %>% summarise(cor = round(cor(x, y), 2)) %>% pull()
+```
+
+La correlación entre las variables $x$ e $y$ en ambos conjuntos de datos es $-0,06$
+
+---
+
+class: bottom, right 
+
+# Correlación no implica causalidad
+
+---
+
+class: middle
+
+# Correlaciones espurias
+
+
+.center[![description of the image](images/divorce_rate.jpg)]
+
+.footnote[Fuente: <http://www.tylervigen.com/spurious-correlations>]
+
+---
+
+class: middle
+
+# Causalidad
+
+Se dice que una acción causa un resultado si el efecto es el resultado directo, o consecuencia, de esta acción. Por lo tanto, el resultado debe ser atribuible a la acción y no a otros factores.
+
+---
+
+class: inverse, center, middle
+
+# Tipos y fuentes de datos
+
+---
+
+class: right, bottom
+
+# Entender cómo los datos fueron recolectados es clave para la obtención de conclusiones del análisis de los datos
+
+---
+
+class: middle
+
+## Datos de sección cruzada o de corte transversal
+
+Corresponden a datos de varios individuos o entidades (empresas, escuelas, etc.) que se recopilan para un único periodo de tiempo. 
+
+
+## Datos de series temporales
+
+Son datos para un único individuo o entidad (persona, empresa, país) recogidos para múltiples periodos. 
+
+---
+
+class: middle
+
+## Combinación de cortes transversales
+
+Combina 2 o más cortes transversales.
+
+## Datos de panel o longitudinales
+
+Son datos sobre varios individuos o entidades en los que cada individuo se observa durante dos o más periodos de tiempo.
+
+---
+
+class: middle
+
+# Aplicación: World Development Indicators
+
+.center[![description of the image](images/WDI.jpg)]
+
+.footnote[Fuente: <http://datatopics.worldbank.org/world-development-indicators/>]
+
+---
+
+class: middle
+
+# Aplicación: Precio del bitcoin
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+bitcoin <- tq_get("CBBTCUSD", get = "economic.data", from = "2016-01-01", to = "2021-03-03")
+
+bitcoin %>% 
+  ggplot(aes(x = date, y = price)) +
+  geom_line(colour = "#3fa3ab", size = 0.5) +
+  scale_x_date(date_breaks = "1 years", date_labels = "%Y") +
+  labs(
+       caption = paste0("Fuente: Coinbase, obtenido de Federal Reserve Bank of St.
+                        Louis (FRED)", "\n", "https://fred.stlouisfed.org/series/CBBTCUSD"),
+       x = NULL,
+       y = "Precio (US$)") +
+  theme_tq()
+```
+
+
+---
+
+class: right, bottom
+
+# Ya sea que los datos correspondan a una sección cruzada, serie de tiempo o un panel, éstos pueden ser experimentales u observacionales, dependiendo si provienen o no de un experimento
+
+---
+
+class: middle
+
+# Datos experimentales y observacionales
+
+## Datos experimentales
+
+Estos datos provienen de experimentos diseñados para evaluar un tratamiento o política o investigar un efecto causal.
+
+
+## Datos observacionales
+
+Son datos obtenidos mediante la observación del comportamiento real fuera de un marco experimental. Estos datos corresponden a encuestas, registros administrativos, datos de transacciones en un supermercado, etc.
+
+---
+
+class: middle 
+
+# Experimento aleatorizado controlado
+
+Experimento en el que los participantes se asignan de manera aleatoria al grupo de control, que no recibe tratamiento, o al grupo de tratamiento, que sí lo recibe. En dicho experimento, la única razón sistemática para la diferencia en resultados entre los grupos tratamiento y control es el tratamiento.
+
+Entre las dificultades prácticas para llevar a cabo experimentos se encuentran: problemas éticos, son caros y la implementación muchas veces no es satisfactoria. Además, no siempre es posible llevar a cabo experimentos. Por ejemplo, no es posible aleatorizar cierto tipo de hábitos como el fumar o alimentarse con una dieta no saludable.
+
+---
+
+class: middle
+
+# Aplicación: Experimentos en evaluación de impacto
+
+El gobierno está interesado en estimar el impacto sobre las ventas de un programa de capacitación en técnicas de marketing dirigido a microemprendedores ¿Cómo se podría utilizar un experimento en este contexto?
+
+---
+class: inverse, center, middle
+
+# Población y muestra
+
+---
+
+class: middle
+
+.center[![description of the image](images/MarcoMuestral.jpg)]
+
+---
+
+class: middle
+
+# Población
+
+Una *población* incluye a todos los individuos u objetos de interés.
+
+# Muestra
+
+Una *muestra* es un subconjunto de la población.
+
+# Marco muestral
+Lista de todos los casos pertenecientes a la población objetivo de los cuales se extraerá la muestra. Por ejemplo, lista de números de teléfonos, listado de direcciones, etc.
+
+
+---
+
+class: middle
+
+# Subcobertura
+
+Denota una situación en que el marco muestral no cubre completamente la población objetivo. Por lo tanto, estas unidades (hogares, personas, empresas, etc.) nunca serán muestreados.
+
+# No respuesta
+
+Sucede cuando un miembro de la muestra no envía la información requerida.
+
+
+---
+
+class: middle
+
+# Aplicación: Encuestas de empleo
+
+Discuta los conceptos de población objetivo, marco muestral, muestra, subcobertura y no respuesta para la Encuesta Nacional de Empleo.
+
+---
+
+class: bottom, right
+
+# Existen varios métodos para obtener una muestra de una población: probabilísticos y no probabilísticos
+
+---
+
+class: middle
+
+# Muestreo probabilístico
+
+Algunos tipos de muestreo probabilístico son:
+
+- Muestreo aleatorio simple
+- Muestreo estratificado
+- Muestreo por clusters
+- Muestreo multi-etápico
+
+---
+
+class: middle
+
+# Muestreo aleatorio simple
+En este tipo de muestreo, cada caso en la población tiene igual probabilidad de ser incluido en la muestra. Además, el conocimiento acerca de un caso incluido en la muestra no entrega información acerca de otros casos también incluidos.
+
+# Muestreo estratificado
+En este caso se divide a la población en estratos (por ejemplo, grupos étnicos o de edad en una encuesta de hogares, tamaño de empresas en una encuesta de empresas) y se obteniene una muestra aleatoria simple independiente en cada uno de éstos. La implementación de este tipo de muestreo tiene un menor costo y entrega estimaciones más precisas (menor varianza).
+
+---
+
+class: middle
+
+# Muestreo por clusters
+En este tipo de muestreo, la población se divide en clusters y se extrae una muestra aleatoria simple de clusters y se incluyen en la muestra todos los casos de los clusters seleccionados. 
+
+# Muestreo multi-etápico
+Primero, se extrae una muestra aleatoria simple de clusters (por ejemplo, manzanas) y luego se selecciona una muestra aleatoria simple de las observaciones que pertenecen a los clusters elegidos (por ejemplo, viviendas).
+
+---
+
+class: middle
+
+# Muestreo no probabilístico
+
+Algunos tipos de muestreo no probabilístico son:
+
+- Muestreo por conveniencia
+- Muestreo por cuotas
+- Muestreo por juicio experto
+- Muestreo de bola de nieve
+
+---
+
+class: middle
+
+# Muestreo por conveniencia
+Los casos incluidos en la muestra son los de más fácil acceso. 
+
+# Muestreo por cuotas
+La población objetivo es dividida en un determinado número de grupos, cuya distribución poblacional es conocida y la composición de la muestra refleja esta distribución. Los tamaños muestrales de los grupos se denominan cuotas y para alcanzarla no se requiere usar muestreo aleatorio.
+
+---
+
+class: middle
+
+# Muestreo por juicio experto
+En este tipo de muestreo los casos son seleccionados usando el juicio experto.
+
+# Muestreo de bola de nieve
+A partir de la localización de ciertos casos que pertenecen a la población objetivo, éstos refieren a otros casos y, de esta forma, se construye una muestra de determinado tamaño como el desplazamiento de una bola de nieve.
+
+---
+
+class: right, bottom
+
+## Mientras en una muestra probabilística cada unidad de la población tiene una probabilidad de selección conocida, en el muestreo no probabilístico dicha probabilidad no es conocida 
+
+---
+
+class: right, bottom
+
+## El método de seleccionar una muestra de la población es crítico para determinar la validez de las conclusiones obtenidas a partir de la muestra acerca de la población.
+
+
+---
+
+class: middle
+
+# Sesgo muestral
+
+Sesgo muestral ocurre cuando el método de seleccionar la muestra provoca que ésta difiera de la población objetivo, afectando negativamente cualquier generalización a la población de los resultados obtenidos a partir de la muestra.
+
+---
+
+class: right, bottom
+
+## Muestreo probabilístico tiende a producir una muestra representativa de la población. Sin embargo, la existencia de subcobertura y no respuesta puede afectar negativamente la representatividad de la muestra
+
+---
+
+class: right, bottom
+
+## En general, muestreo no probabilístico tiende a producir una muestra no representativa de la población
+
+---
+
+class: middle
+
+# ¿Qué significa independiente e idénticamente distribuidas (i.i.d.)?
+
+Si $X_1, X_2, ..., X_n$ son extracciones de la misma distribución y están independientemente distribuidas, entonces son independientes idénticamente distribuidas.
+
+---
+
+class: middle
+
+# Parámetro poblacional y estadístico muestral
+
+## Parámetro poblacional
+
+Es una medición numérica que describe algunas características de una población. 
+
+## Estadístico muestral
+
+Un estadístico muestral es una métrica calculada para un muestra obtenida de una población. 
+
+---
+
+class: middle
+
+<table style="width:100%">
+  <tr>
+    <th> </th>
+    <th>Parámetro poblacional</th>
+    <th>Estadístico muestral</th>
+  </tr>
+  <tr>
+    <td>Media</td>
+    <td>&mu;</td>
+    <td> <SPAN STYLE="text-decoration:overline">x</SPAN></td>
+  </tr>
+  <tr>
+    <td>Desviación estándar</td>
+    <td>&sigma;</td>
+    <td>s</td>
+  </tr>
+  <tr>
+    <td>Proporción</td>
+    <td>p</td>
+    <td>p&#770;</td>
+  <tr>
+    <td>Correlación</td>
+    <td>&#961;</span></td>
+    <td>r</td>
+  </tr>
+  </tr>
+</table>
+
+---
+
+class: middle
+
+# Distribución muestral
+
+La media muestral $\overline x$ u otro estadístico muestral varía de una muestra obtenida aleatoriamente a otra y, por lo tanto, es una variable aleatoria con una distribución muestral.
+
+---
+
+class: middle
+
+La construcción de esta distribución muestral se puede realizar:
+
+- Obteniendo muchas muestras de tamaño $n$ de una misma población, calculando la media muestral u otro estadístico para cada una de las muestras obtenidas y, de esta manera, definir la distribución muestral de dicho estadístico.
+- Usando teoría estadística. Uno de los resultados más poderosos es el Teorema del Límite Central que se revisa a continuación.
+
+---
+
+class: middle
+
+# Teorema del límite central
+
+Si las muestras son seleccionadas aleatoriamente y el tamaño muestral es lo suficientemente grande, la distribución muestral de la media muestral puede ser aproximada por la distribución normal.
+
+---
+
+class: middle
+
+# Error estándar
+
+El error estándar mide la dispersión de la distribución muestral del estadístico y se calcula como la desviación estándar de los valores del estadístico muestral. El error estándar se puede usar para cuantificar la incertidumbre en una estimación.
+
+A medida que el tamaño muestral aumenta, el error estándar disminuye y el estadístico muestral tiende a encontrarse más cercano al valor del parámetro poblacional.
+
+
+
+---
+
+class: middle
+
+# Aplicación: Distribución muestral de $\hat p$
+
+Sea $p=60\%$ la proporción de la población que favorece el teletrabajo. A continuación se presenta la distribución de la proporción muestral para 10000 muestras de tamaño 1500, construidas a partir de simulaciones. 
+
+```{r eval=FALSE, echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+popsize <- 5000000
+marco <- c(rep("SI", 0.6 * popsize), rep("NO", 0.4 * popsize))
+
+reps = 10000 # número de repeticiones
+phat = matrix(NA, nrow = reps, ncol = 1)
+
+n = 100  #tamaño muestral
+
+      for (i in 1:reps) {
+          muestra = sample(marco, n)
+          phat[i] = mean(muestra == "SI") 
+      }
+
+prop_df <- data.frame(phat) 
+
+prop_df %>% ggplot(aes(x = phat)) +
+  geom_histogram(bins = 20, colour = "#636363", fill = "#3fa3ab") +
+  scale_y_continuous(expand= c(0,0)) +
+  labs(
+       x = "Proporción muestral",
+       y = "Frecuencia") +
+  p 
+
+#El error estándar de la proporción muestral es `r sd(prop_df$phat)`
+
+```
+
+---
+
+class: middle
+
+# Teorema del Límite Central y distribución muestral de $\hat p$ 
+
+Cuando las observaciones son independientes y el tamaño de la muestra es lo suficientemente grande, la distribución de la proporción muestral tiende a una distribución normal con la siguiente media y error estándar (<i>ES</i>):
+
+$$\mu_{\hat p}=p \hspace{2cm} ES_{\hat p}=\sqrt{\frac{p(1-p)}{n}}$$
+
+
+El tamaño muestral es lo suficientemente grande cuando
+
+$np \geq 10$ y $n(1-p) \geq 10$ 
+
+---
+class: inverse, center, middle
+
+# Intervalos de confianza
+
+---
+
+class: middle
+
+El intervalo de confianza para un parámetro poblacional es un intervalo calculado a partir de una muestra al interior del cual es plausible que el parámetro poblacional se encuentre. Una vez que el intervalo ha sido construido, este puede o no incluir el valor del parámetro poblacional.
+
+Por ejemplo, un intervalo de confianza al $95\%$ significa que si se muestrea repetidamente un gran número de veces, se espera que el $95\%$ de los intervalos construidos a partir de una muestra incluyan el valor del parámetro poblacional. En este caso, se dice que $95\%$ representa el nivel de confianza.
+
+---
+
+class: middle
+
+# ¿Cómo construir un intervalo de confianza?
+
+- Usar bootstrapping
+- Usar resultados de teoría de la distribución
+
+
+---
+
+class: middle
+
+# Intervalo de confianza para la proporción 
+
+Si $\hat p$ se distribuye normalmente, entonces un intervalo de confianza se construye como:
+
+$$\hat p \pm z \sqrt{\frac{p(1-p)}{n}}$$
+
+donde el valor que toma $z$ depende del nivel de confianza escogido. 
+
+
+```{r echo = FALSE}
+tibble::tibble(
+  `Nivel de confianza` = c('90%', '95%', '99%'),
+  `z` = c(1.64, 1.96, 2.58)
+                    
+  ) %>%
+    kbl(format = 'html')
+
+```
+
+
+---
+
+class: middle
+
+# Aplicación: ¿Cuál es la proporción de la población que favorece el teletrabajo?
+
+Suponga que para una muestra de 1500 personas, la proporción de quienes favorecieron el teletrabajo es $\hat p = 0,62$ y, por lo tanto, el intervalo de confianza al $95\%$ para la proporción es:
+
+$$0,62 \pm 1,96 \sqrt{\frac{0,62(1-0,62)}{1500}}$$
+
+Por lo tanto, el intervalo de confianza al $95\%$ para la proporción de la población que favorece el teletrabajo está entre $59,5\%$ y $64,5\%$.
+
+---
+class: inverse, center, middle
+
+# Test de hipótesis
+
+---
+
+class: bottom, right
+
+# El propósito de un test de hipótesis es determinar si los resultados de una muestra son suficientemente convincentes para concluir algo acerca de la población.
+
+---
+
+class: bottom, right
+
+# La realización de un test de hipótesis considera la formulación de una hipótesis nula y una alternativa.
+---
+
+class: middle
+
+# Hipótesis nula y alternativa
+
+## Hipótesis nula (H0)
+En muchos casos, esta hipótesis se plantea en términos de que no hay efecto o diferencia.
+
+
+## Hipótesis alternativa (H1)
+Afirmación para la cual se busca evidencia significativa contra la que se compara la hipótesis nula.
+
+---
+
+class: middle
+
+- El objetivo de un test de hipótesis es determinar si la muestra provee de suficiente evidencia para refutar la hipótesis nula en favor de la hipótesis alternativa.
+- Las hipótesis nula y alternativa son escritas en términos de los parámetros poblacionales y no de los estadísticos muestrales.
+- No rechazar la hipótesis nula no significa que se acepte como verdadera, sino sólo que no hay suficiente evidencia para rechazarla. 
+
+---
+
+class: bottom, right
+
+# ¿Errores? Siempre es posible tomar decisiones incorrectas a partir de un test de hipótesis
+
+---
+
+class: middle
+
+# Errores tipo I y II
+
+.center[![description of the image](images/errores.jpg)]
+
+Un error tipo I es también conocido como un *falso positivo* y un error tipo II es un *falso negativo*.
+
+---
+
+class: middle
+
+# Aplicación: Errores en sistema judicial penal 
+
+- La persona es inocente (Hipótesis nula)
+- La persona es culpable (Hipótesis alternativa)
+
+En este caso,
+
+- Error tipo I: declarar culpable a una persona inocente
+- Error tipo II: aún cuando la persona es culpable, no hay evidencia suficiente para culparlo
+
+---
+
+class: middle
+
+# Nivel de significancia $(\alpha)$
+
+Si la hipótesis nula es verdadera, el nivel de significancia indica cuán a menudo se rechaza incorrectamente la hipótesis nula. Por lo tanto, el nivel de significancia representa la probabilidad de cometer un error tipo I.
+
+---
+
+class: bottom, right
+
+# ¿Cómo implementar un test de hipótesis?
+
+---
+
+class: middle
+
+- Intervalos de confianza
+- Valores-p (p-values)
+- Estadístico de prueba
+
+---
+
+class: middle
+
+# Intervalos de confianza
+
+Si el valor del parámetro poblacional bajo la hipótesis nula no es incluido en el intervalo de confianza como un valor plausible del parámetro poblacional, entonces se rechaza la hipótesis nula.
+
+No siempre es posible usar intervalos de confianza para implementar un test de hipótesis. 
+
+---
+
+class: middle
+
+# Valores p (p-values)
+
+El p-valor es la probabilidad de observar valores del estadístico muestral tan o más extremos que el valor observado, debido solamente a la variación muestral, asumiendo que la hipótesis nula es verdadera. Corresponde al menor nivel de significancia al que se habría rechazado la hipótesis nula.
+
+Para el cálculo del valor-p debe usarse la distribución muestral del estadístico bajo $H_0$. Mientras más pequeño sea el valor-p, más fuerte es la evidencia estadística contra la hipótesis nula y en apoyo de la hipótesis alternativa.
+
+Por lo tanto,
+ 
+- Si valor-p $< \alpha$, rechazar $H_0$
+- Si valor-p $\geq \alpha$, no rechazar $H_0$
+
+---
+
+class: middle
+
+# Estadístico de prueba 
+
+Un estadístico de prueba, denotado como T, es alguna función de la muestra aleatoria. El valor calculado del estadístico de prueba se compara a un valor crítico (c) para definir si se rechaza o no $H_0$. El cálculo del valor crítico depende del nivel de significancia elegido y se determina mediante distribución del estadístico de prueba, asumiendo que la hipótesis nula sea verdadera.
+
+---
+
+class: middle
+
+# ¿Qué nivel de significancia utilizar?
+
+- Si las consecuencias de un error tipo I son graves como, por ejemplo, aprobar un nuevo medicamento, podría resultar adecuado usar un valor muy pequeño de $\alpha$ con el fin de que los consumidores puedan estar seguros de que los medicamentos disponibles en el mercado benefician la salud.
+- Si las consecuencias de un error tipo II son graves como, por ejemplo, no diagnosticar una enfermedad curable, podría ser preferible usar un valor de $\alpha$ más grande.
+- En casos legales, la hipótesis nula podría ser que el imputado fuera no culpable, por lo que para rechazarla debemos estar bastante seguros, lo que exige niveles de significación de $1\%$ o incluso $0,1\%$.
+
+---
+
+class: middle
+
+# Significancia estadística y significancia práctica
+
+- Un resultado que es estadísticamente significativo puede no tener significancia práctica.
+- Mientras más grande es el tamaño de la muestra, más fácil es encontrar resultados estadísticamente significativos, si la hipótesis alternativa es verdadera.
+
+---
+
+class: inverse, center, middle
+
+# Distribución normal
+
+---
+
+class: middle
+
+- La distribución de muchas variables aleatorias puede representarse por la distribución normal
+
+- De acuerdo al Teorema del Límite Central la distribución muestral de una media o una proporción es normal.
+
+- Se usará la notación $N(\mu, \sigma^2)$ para especificar una distribución normal con media $\mu$ y varianza $\sigma^2$.
+
+- La distribución normal es simétrica y unimodal.
+
+- La función de densidad de probabilidad de una variable X con distribución normal es:
+
+$$f(x;\mu, \sigma)=\frac{1}{\sqrt{2 \pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}} \quad -\infty< x <\infty$$
+
+- La distribución normal estándar es la distribución normal con $\mu=0$ y $\sigma^2=1$  y se expresa como $N(0, 1)$.
+
+---
+
+class: middle
+
+# Distribuciones normales con diferentes medias
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+ggplot(data.frame(x=c(-3,5)), aes(x)) + 
+  stat_function(fun=dnorm, args=list(mean=0, sd=1), 
+                geom="line", colour="red", size=1) + 
+  stat_function(fun=dnorm, args=list(mean=2, sd=1), 
+                geom="line", colour="black", size=1) +
+  scale_x_continuous(breaks = seq(-3,5), label = seq(-3,5)) +
+  scale_y_continuous(expand= c(0,0), limits = c(0, 0.5)) +
+  annotate(geom = "text", x = 0, y = 0.42, parse = TRUE, label = "mu==0 ~ ',' ~ sigma == 1") +
+  annotate(geom = "text", x = 2, y = 0.42, parse = TRUE, label = "mu==2 ~ ',' ~ sigma == 1") +
+  p +
+  labs(x = "x", y= "") +
+  theme(axis.text.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+```
+
+---
+
+class: middle
+
+# Distribuciones normales con diferentes desviaciones estándar
+
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+
+ggplot(data.frame(x=c(-5,5)), aes(x)) + 
+  stat_function(fun=dnorm, args=list(mean=0, sd=0.5), 
+                geom="line", colour="red", size=1) + 
+  stat_function(fun=dnorm, args=list(mean=0, sd=1), 
+                geom="line", colour="black", size=1) +
+  stat_function(fun=dnorm, args=list(mean=0, sd=2), 
+                geom="line", colour="blue", size=1) +
+  scale_x_continuous(breaks = seq(-5,5), label = seq(-5,5)) +
+  scale_y_continuous(expand= c(0,0)) +
+  annotate(geom = "text", x = 1.5, y = 0.75, parse = TRUE, label = "mu==0 ~ ',' ~ sigma == 0.5") +
+  annotate(geom = "text", x = 2, y = 0.3, parse = TRUE, label = "mu==0 ~ ',' ~ sigma == 1") +
+  annotate(geom = "text", x = 3, y = 0.15, parse = TRUE, label = "mu==0 ~ ',' ~ sigma == 2") +
+  annotate("segment", x = 1.5, xend = 0.4, y = 0.72, yend = 0.65, colour = "black", size=0.6, arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  annotate("segment", x = 2, xend = 1.3, y = 0.27, yend = 0.2, colour = "black", size=0.6, arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  annotate("segment", x = 3, xend = 2.6, y = 0.12, yend = 0.1, colour = "black", size=0.6, arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  p +
+  labs(x = "x", y= "") +
+  theme(axis.text.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+
+---
+
+class: middle
+
+- Se entiende por estandarización de una variable al método que permite transformar los valores de $X$ a $Z$, donde:
+
+$$Z=\frac{X-\mu}{\sigma}$$
+
+
+- Si $X \sim N(\mu, \sigma^2)$, entonces $Z$ tiene una distribución normal estándar [6].
+
+
+$$P(a\leq X \leq b) = P(\frac{a-\mu}{\sigma} \leq \frac{X-\mu}{\sigma} \leq \frac{b-\mu}{\sigma})$$
+$$ = \Phi(\frac{b-\mu}{\sigma})-\Phi(\frac{a-\mu}{\sigma})$$
+
+donde $\Phi()$ representa la distribución normal estándar acumulada.
+
+.footnote[
+[6] Se denomina Z-score. Por ejemplo, una observación con un Z-score de 2 corresponde a una que se encuentra dos desviaciones estándar arriba de la media. El Z-score es independiente de la unidad de medición.
+]
+
+---
+
+class: middle
+
+# Aplicación: cálculo de probabilidad
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+
+ggplot(data.frame(x=c(-3,3)), aes(x)) + 
+  stat_function(fun=dnorm, args=list(mean=0, sd=1), 
+                geom="line", size=1.1, colour = "#636363") + 
+  geom_area(stat = "function", fun = dnorm, fill = "#3fa3ab", xlim = c(-1.96,1.96)) +
+  scale_x_continuous(breaks = c(-1.96, 1.96), labels = c(-1.96, 1.96)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,0.4), labels = NULL) +
+  p +
+  labs(x = "z", y= "") +
+  theme(axis.line.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+$$P(-1,96 \leq Z\leq 1,96)=\Phi(1,96)-\Phi(-1,96)=0,95$$
+
+---
+
+class: middle
+
+# Aplicación: cálculo de probabilidad
+
+Sea $X \sim N(80,100)$. Calcule la probabilidad $P(X\leq95)$
+
+$$P(X\leq 95) = P(Z \leq \frac{95-80}{10}) = P(Z\leq 1,5)=\Phi(1,5)=0,933$$
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+
+ggplot(data.frame(x=c(-3,3)), aes(x)) + 
+  stat_function(fun=dnorm, args=list(mean=0, sd=1), 
+                geom="line", size=1.1, colour = "#636363") + 
+  geom_area(stat = "function", fun = dnorm, fill = "#3fa3ab", xlim = c(-3,1.5)) +
+  scale_x_continuous(breaks = c(0, 1.5), labels = c(0, 1.5)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,0.4), labels = NULL) +
+  p +
+  labs(x = "z", y= "") +
+   theme(axis.line.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+---
+
+class: middle
+
+Si una variable se distribuye normalmente, entonces:
+
+- $68\%$ de los valores se encuentra $\pm$ 1 desviación estándar de la media  
+- $95\%$ de los valores se encuentra $\pm$ 1.96 desviaciones estándar de la media  
+- $99.7\%$ de los valores se encuentra $\pm$ 3 desviaciones estándar de la media 
+
+.center[![description of the image](images/regla_empirica.jpg)]
+
+---
+
+class: middle
+
+# Distribución normal multivariante
+
+Si la distribución conjunta de un conjunto de variables es normal, entonces se dice que la distribución es normal multivariante.
+
+Para el caso de dos variables $X$ e $Y$ que presentan una distribución normal bivariante, se tienen las siguientes propiedades:
+
+- Si $X$ e $Y$ presentan una distribución normal bivariante con covarianza $\sigma_{XY}$ y $a$ y $b$ son dos constantes, entonces $aX+bY \sim N(a\mu_X+b\mu_Y, a^2\sigma^2_X+b^2\sigma^2_Y+2ab\sigma_{XY})$ 
+
+- Si $X$ e $Y$ presentan una distribución normal bivariante, entonces la distribución marginal de $X$ e $Y$ es normal
+
+- Si $X$ e $Y$ tienen una distribución normal bivariante y $\sigma_{XY}=0$, entonces $X$ e $Y$ son independientes.
+
+- Si $X$ e $Y$ tienen una distribución normal bivariante, entonces $E(Y|X=x)=a+bx$ para $a$ y $b$ escogidas adecuadamente. La normalidad conjunta implica linealidad de las esperanzas condicionales, pero la linealidad de las esperanzas condicionales no implica normalidad conjunta.
+
+ 
+
+---
+
+class: inverse, center, middle
+
+# Distribución chi-cuadrado
+
+---
+
+class: middle
+
+La distribución chi-cuadrado es la distribución de la suma de $m$ variables aleatorias normales estándar independientes al cuadrado, donde $m$ representa el número de grados de libertad de la distribución chi-cuadrado. El valor esperado de una variable aleatoria con distribución chi-cuadrado es $m$ y la varianza es $2m$.
+
+Por ejemplo, sean $Z_1$, $Z_2$, $Z_3$ y $Z_4$ variables aleatorias normales estándar independientes. Por lo tanto, $$Z_1^2 + Z_2^2 + Z_3^2 + Z_4^2 \sim \chi_4^2$$
+
+tiene una distribución chi-cuadrado con 4 grados de libertad.
+
+---
+
+class: middle
+
+# Distribuciones chi-cuadrado con diferentes números de grados de libertad
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+
+ggplot(data.frame(x=c(0,20)), aes(x)) + 
+  stat_function(fun=dchisq, args=list(2), 
+                geom="line", colour="red", size=1) + 
+  stat_function(fun=dchisq, args=list(4), 
+                geom="line", colour="black", size=1) +
+  stat_function(fun=dchisq, args=list(8), 
+                geom="line", colour="blue", size=1) +
+  scale_x_continuous(expand= c(0,0)) +
+  scale_y_continuous(expand= c(0,0)) +
+  annotate("text", x = 1.5, y = 0.4, label = "gl = 2") +
+  annotate("text", x = 4, y = 0.18, label = "gl = 4") +
+  annotate("text", x = 12.5, y = 0.08, label = "gl = 8") +
+  p +
+  labs(x = "x", y= "") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+---
+
+class: inverse, center, middle
+
+# Distribución t de Student
+
+---
+
+class: middle
+
+La distribución $t$ de Student con $m$ grados de libertad, se define como: $$\frac{Y}{\sqrt {W/m}} \sim t_m$$
+
+donde $Y$ es una variable aleatoria normal estándar y $W$ es una variable chi-cuadrado con $m$ grados de libertad.
+
+A medida que el número de grados de libertad aumenta, las distribución $t$ se aproxima a una distribución normal estándar.
+
+---
+
+class: middle
+
+# Distribuciones t de Student con diferentes números de grados de libertad
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+
+ggplot(data.frame(x=c(-3,3)), aes(x)) + 
+  stat_function(fun=dt, args=list(1), 
+                geom="line", colour="red", size=1) + 
+  stat_function(fun=dt, args=list(2), 
+                geom="line", colour="black", size=1) +
+  stat_function(fun=dt, args=list(1000), 
+                geom="line", colour="blue", size=1) +
+  scale_y_continuous(expand= c(0,0)) +
+  annotate("text", x = 0.8, y = 0.1, label = "gl = 1") +
+  annotate("text", x = 1.5, y = 0.25, label = "gl = 2") +
+  annotate("text", x = 1.05, y = 0.38, label = "gl = 1000") +
+  annotate("segment", x = 0.8, xend = 1, y = 0.11, yend = 0.15, colour = "black", size=0.6, arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  annotate("segment", x = 1.5, xend = 1.03, y = 0.23, yend = 0.2, colour = "black", size=0.6, arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  annotate("segment", x = 1.05, xend = 0.8, y = 0.36, yend = 0.3, colour = "black", size=0.6, arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  p +
+  labs(x = "x", y= "") +
+  theme(axis.text.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+
+---
+
+class: inverse, center, middle
+
+# Distribución F
+
+---
+
+class: middle
+
+La distribución $F$ con $m$ y $n$ grados de libertad, expresada mediante $F_{m,n}$, se define como: $$\frac{W/m}{Z/n} \sim F_{m,n}$$
+
+donde $W$ es una variable aleatoria chi-cuadrado con $m$ grados de libertad y $Z$ es una
+variable aleatoria chi-cuadrado con $n$ grados de libertad. $W$ y $Z$ están independientemente distribuidas.
+
+---
+
+class: middle
+
+# Distribuciones F con diferentes números de grados de libertad
+
+```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+
+ggplot(data.frame(x=c(0,2.5)), aes(x)) + 
+  stat_function(fun=df, args=list(2,8), 
+                geom="line", colour="red", size=1) + 
+  stat_function(fun=df, args=list(6,8), 
+                geom="line", colour="black", size=1) +
+  stat_function(fun=df, args=list(6,20), 
+                geom="line", colour="blue", size=1) +
+  scale_x_continuous(expand= c(0,0)) +
+  scale_y_continuous(expand= c(0,0)) +
+  annotate("text", x = 0.2, y = 0.95, label = "gl = 2,8") +
+  annotate("text", x = 0.9, y = 0.85, label = "gl = 6,8") +
+  annotate("text", x = 1.2, y = 0.6, label = "gl = 6,20") +
+  annotate("segment", x = 0.9, xend = 0.8, y = 0.83, yend = 0.61, colour = "black", size=0.6, arrow=arrow(length = unit(0.2, "cm"), type = "closed")) +
+  p +
+  labs(x = "x", y= "") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```

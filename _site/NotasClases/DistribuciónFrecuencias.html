@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Distribución de los datos</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Víctor Macías E." />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Distribución de los datos
+### Víctor Macías E.
+
+---
+
+
+
+
+
+
+
+
+
+class: bottom, right
+
+## Para comenzar el análisis de la distribución de datos cualitativos y cuantitativos, se discutirá la presentación de tablas y gráficos que resumen la distribución de dichos datos
+
+
+---
+
+class: middle
+
+## Distribución de frecuencia
+
+Una distribución de frecuencia es un resumen en forma de tabla de los datos que muestra el número (frecuencia) de elementos en cada una de las diferentes clases que no se sobreponen. 
+
+--
+### Variable cualitativa
+
+Si la variable es cualitativa, las clases corresponden a las categorías que contiene la variable.
+
+--
+### Variable cuantitativa
+
+Si la variable es cuantitativa, los datos deben agruparse para construir las clases.
+
+
+---
+
+class: middle
+
+## Distribución de frecuencia relativa 
+
+Muestra un resumen tabular de datos en el que se muestra la frecuencia relativa de cada clase.
+
+`$$Frecuencia \hspace{0.1cm}relativa\hspace{0.1cm} de\hspace{0.1cm} una\hspace{0.1cm} clase = \frac{Frecuencia \hspace{0.1cm} de \hspace{0.1cm} la\hspace{0.1cm} clase}{n}$$`
+
+## Distribución de frecuencia porcentual 
+
+Muestra la frecuencia porcentual de los datos de cada clase.
+
+`$$Frecuencia \hspace{0.1cm}relativa\hspace{0.1cm} de\hspace{0.1cm} una\hspace{0.1cm} clase = \frac{Frecuencia \hspace{0.1cm} de \hspace{0.1cm} la\hspace{0.1cm} clase}{n} \times 100$$`
+
+---
+
+class: bottom, right
+
+## A continuación usaremos el conjunto de datos *loan50* que se encuentran disponibles en el paquete *openintro* para aplicar estos conceptos
+
+---
+class: inverse, center, middle
+
+# Resumen de datos cualitativos
+
+---
+
+class: middle
+
+# Tabla
+
+La siguiente tabla muestra la distribución de frecuencias, frecuencia relativa y frecuencia porcentual de la variable `homeownership`.
+
+
+```r
+loan50 %&gt;%
+  group_by(homeownership) %&gt;%
+  tally(sort = TRUE) %&gt;% 
+  mutate(frec_relativa = n/sum(n), frec_porcentual = frec_relativa*100) %&gt;%
+  kbl() %&gt;%
+  kable_styling(bootstrap_options = "striped", font_size = 12)
+```
+
+&lt;table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; homeownership &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; n &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; frec_relativa &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; frec_porcentual &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; mortgage &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 52 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; rent &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.42 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; own &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.06 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+
+class: middle
+
+## Gráfica de barras y de pastel
+
+Dos tipos de gráficos que se usan para representar los datos cualitativos de una distribución de frecuencia, frecuencia relativa o frecuencia porcentual.
+
+---
+
+class: middle
+
+# Gráfico de barras
+
+
+```r
+loan50 %&gt;% ggplot(aes(x = fct_infreq(homeownership))) +
+  geom_bar(fill = "#3fa3ab", color = "#000000") +
+  labs(x = "homeownership", y = "Frecuencia") +
+  theme_classic()
+```
+
+&lt;img src="DistribuciónFrecuencias_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+# Gráfico de pastel o torta
+
+
+```r
+loan50 %&gt;%
+  group_by(homeownership) %&gt;% tally(sort = TRUE) %&gt;% 
+  mutate(frec_relativa = n/sum(n), frec_porcentual = frec_relativa*100, 
+         ypos = cumsum(frec_porcentual)- 0.5*frec_porcentual) %&gt;% 
+  ggplot(aes(x= 0, y = frec_porcentual, fill = fct_reorder(homeownership, frec_porcentual))) +
+  geom_bar(stat = "identity", width = 1, color = "white") + coord_polar(theta = 'y', start = 0) +
+  geom_text(aes(x= 0.2, y = ypos, label = paste0(frec_porcentual,"%")), color = "white") +
+  scale_fill_brewer(name = "Homeownership", palette="Set1") + theme_void()
+```
+
+&lt;img src="DistribuciónFrecuencias_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, center, middle
+
+# Resumen de datos cuantitativos
+
+
+---
+class: middle
+
+Para construir una distribución de frecuencias de datos cuantitativos, se requiere agrupar los datos en intervalos que no se intersectan. Cada dato debe pertenecer a sólo uno de dichos intervalos. Los pasos a seguir son los siguientes:
+
+--
+&lt;ol&gt;
+  &lt;li&gt;Determinar el número de clases disjuntas&lt;/li&gt;
+--
+  &lt;li&gt;Determinar el ancho de cada clase&lt;/li&gt;
+--
+  &lt;li&gt;Determinar los límites de clase&lt;/li&gt;
+&lt;/ol&gt;
+
+---
+class: middle
+
+## Número de clases
+Número de intervalos que se usarán para agrupar los datos.
+
+## Ancho de cada clase
+
+`$$Ancho \hspace{0.1cm}de\hspace{0.1cm} la\hspace{0.1cm} clase = \frac{Valor \hspace{0.1cm} máximo - Valor \hspace{0.1cm} mínimo}{Número\hspace{0.1cm} de\hspace{0.1cm} clases}$$`
+Note que mientras mayor es el número de clases, menor es el ancho de cada una.
+
+## Límite de clase
+Valores mínimos y máximos de cada clase. El &lt;em&gt;punto medio de clase&lt;/em&gt; es el valor que queda a la mitad entre el límite inferior y el límite superior de la clase
+
+---
+class: bottom, right
+
+## Después de haber agrupado los datos cuantitativos en clases, se construyen las distribuciones de frecuencia, frecuencia relativa y frecuencia porcentual, de la misma manera que se hizo para datos cualitativos
+
+---
+class: middle
+
+A continuación se presentan los pasos para el cálculo de la distribución de frecuencias de la variable `interest_rate`
+
+--
+
+#### Determinar el valor mínimo y máximo de la tasa de interés
+La tasa de interés mínima es 5.31% y la tasa de interés máxima es 26.3%.
+
+--
+
+#### Determinar el número de clases
+Usaremos 9 clases para agrupar los datos de tasas de interés
+
+--
+
+#### Cálculo del ancho de cada clase
+El ancho de clase es igual a:
+
+`$$Ancho\hspace{0.1cm} de\hspace{0.1cm} clase=\frac{27-5}{9}= 2.444$$`
+
+Se aproximará el ancho de cada clase a 2.5
+
+--
+
+Por lo tanto, los datos serán agrupados en las siguientes clases: `\(5 &lt;i\leq7.5\)`, `\(7.5&lt; i\leq10\)`, `\(10&lt; i\leq12.5\)`, `\(12.5&lt; i\leq15\)`, `\(15&lt; i\leq17.5\)`, `\(17.5&lt; i\leq20\)`, `\(20&lt; i\leq22.5\)`, `\(22.5&lt; i\leq25\)`, `\(25&lt; i\leq27.5\)`
+
+
+---
+class: middle
+
+# Tabla
+
+La siguiente tabla muestra la distribución de frecuencias, frecuencia relativa y frecuencia porcentual de la variable `interest_rate`.
+
+
+```r
+rate_breaks &lt;- c(5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5)
+loan50 %&gt;% group_by(rate_cat = cut(interest_rate, breaks=rate_breaks)) %&gt;%
+  tally() %&gt;% mutate(frec_rel = n/sum(n), frec_porc = frec_rel*100) %&gt;%
+  kbl() %&gt;% kable_styling(bootstrap_options = "striped", font_size = 12)
+```
+
+&lt;table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; rate_cat &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; n &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; frec_rel &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; frec_porc &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (5,7.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (7.5,10] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (10,12.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.16 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (12.5,15] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (15,17.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (17.5,20] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (20,22.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (22.5,25] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (25,27.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+class: middle
+
+## Histogramas
+
+Permite representar la distribución de frecuencias de datos cuantitativos, facilitando la visualización de los valores más comunes y la forma de la distribución de los datos.
+
+---
+class: middle
+
+# Histograma 
+
+El siguiente histograma representa la distribución de frecuencias de la variable `interest_rate`.
+
+
+```r
+loan50 %&gt;% ggplot(aes(x = interest_rate)) + geom_histogram(breaks = seq(5, 27.5, 2.5), fill = "#3fa3ab", color = "#ffffff") +
+  scale_x_continuous(breaks = seq(5, 27.5, 2.5), labels = seq(5, 27.5, 2.5)) +
+  labs(x = "Tasa de interés (%)", y = "Frecuencia") + theme_classic()
+```
+
+&lt;img src="DistribuciónFrecuencias_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: bottom, right
+
+
+## Dependiendo de la forma del histograma, se dice que la distribución es &lt;b&gt;simétrica, sesgada a la izquierda o sesgada a la derecha&lt;/b&gt;
+
+---
+
+class: middle
+
+.center[![](images/histograma_sesgo.jpg)]
+
+---
+
+class: bottom, right
+
+## Se dice que la distribución es &lt;b&gt;unimodal, bimodal o multimodal&lt;/b&gt; si tiene uno, dos o más de dos peaks prominentes, respectivamente
+
+
+---
+class: middle
+
+### ¿Cuál de las siguientes distribuciones es unimodal, bimodal o multimodal?
+
+.center[![](images/histograma_moda.jpg)]
+
+---
+
+class: middle
+
+En base al histograma de la tasa de interés:
+
+--
+
+#### ¿Es la distribución simétrica, sesgada hacia la izquierda o sesgada hacia la derecha?
+
+--
+
+#### ¿Es la distribución unimodal, bimodal o multimodal?
+
+---
+class: middle
+
+## Distribución de frecuencia acumulada 
+
+Muestra la cantidad de datos que tienen valores menores o iguales al límite superior de cada clase.
+
+## Distribución de frecuencias relativas acumuladas
+
+Indica la proporción de todos los datos que tienen valores menores o iguales al límite superior de cada clase.
+
+## Distribución de frecuencias porcentuales acumuladas 
+
+Indica el porcentaje de todos los datos que tienen valores menores o iguales al límite superior de cada clase.
+
+---
+
+class: middle
+
+# Tabla
+
+La siguiente tabla muestra la distribución de frecuencia porcentual acumulada de la variable `interest_rate`.
+
+
+```r
+loan50 %&gt;% group_by(rate_cat = cut(interest_rate, breaks=rate_breaks)) %&gt;%
+  tally() %&gt;% mutate(frec_rel = n/sum(n), frec_porc = frec_rel*100, frec_porc_acum = cumsum(frec_porc)) %&gt;%
+  kbl() %&gt;% kable_styling(bootstrap_options = "striped", font_size = 12)
+```
+
+&lt;table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; rate_cat &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; n &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; frec_rel &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; frec_porc &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; frec_porc_acum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (5,7.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (7.5,10] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 52 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (10,12.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.16 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 68 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (12.5,15] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 76 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (15,17.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (17.5,20] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 94 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (20,22.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 96 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (22.5,25] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 98 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (25,27.5] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 100 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+class: bottom, right
+
+## Hasta ahora hemos trabajado con tablas y gráficos usados para representar sólo una variable ¿Y si se quiere representar la relación entre dos variables?
+
+---
+
+class: middle
+
+# Tabla cruzada
+
+La siguiente tabla muestra la relación entre las variables `loan_status` y `homeownership`.
+
+
+```r
+loan50 %&gt;% tabyl(loan_status, homeownership) %&gt;% adorn_totals(c("row", "col")) %&gt;%
+  adorn_title("combined") %&gt;% kbl() %&gt;% kable_styling(bootstrap_options = "striped", font_size = 12)
+```
+
+&lt;table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; loan_status/homeownership &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; rent &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; mortgage &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; own &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Charged Off &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Current &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fully Paid &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; In Grace Period &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Late (16-30 days) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Late (31-120 days) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 50 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+
+class: middle
+
+# Gráfico de dispersión
+
+El siguiente gráfico muestra la relación entre las variables `total_income` y `loan_amount`.
+
+
+
+```r
+loan50 %&gt;% ggplot(aes(x = total_income, y = loan_amount)) +
+  geom_point(colour = "#3fa3ab", size = 2) +
+  scale_x_continuous(labels = scales::label_number()) +
+  theme_classic()
+```
+
+&lt;img src="DistribuciónFrecuencias_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

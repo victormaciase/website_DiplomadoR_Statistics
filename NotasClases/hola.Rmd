@@ -1,0 +1,101 @@
+---
+title: "Explorando datos numéricos"
+author: "Víctor Macías"
+output: 
+  slidy_presentation:
+    css: styles2.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+
+## grafico
+
+```{r echo = FALSE}
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+library(tidyr)
+library(tidymodels)
+library(datasauRus)
+library(kableExtra)
+library(HistData)
+library(openintro)
+library(DT)
+library(plotly)
+library(scales)
+```
+
+
+```{r echo = FALSE}
+data("loan50")
+```
+
+# Explorando variables numéricas
+
+##
+
+```{r}
+loan50 %>% slice_head(n = 8) %>% 
+  select(loan_amount, interest_rate, term, grade, state, total_income, homeownership) %>%
+  datatable(rownames = FALSE, filter = 'top', options = list(pageLength = 8,
+                                                             autoWidth = TRUE)) %>%
+  formatStyle(columns = colnames(.), fontSize = '50%')
+```
+
+## Gráfico de dispersión
+
+El siguiente gráfico muestra la relación entre dos variables numéricas: ingreso total y monto del préstamo.
+
+```{r echo = FALSE}
+loan50 %>%
+  plot_ly(x = ~total_income, y = ~loan_amount) %>% 
+  add_markers() %>%
+  layout(xaxis = list(title = "Ingreso total (en dólares)"),
+         yaxis = list(title = "Monto del préstamo (en dólares)"))
+```
+
+##
+
+```{r}
+loan50 %>% ggplot(aes(x = interest_rate)) +
+  geom_dotplot(fill = COL["blue", "full"], color = COL["blue", "full"]) +
+  scale_x_continuous(breaks = seq(5,25,5), labels = label_percent(scale = 1)) +
+  labs(x = "Tasa de interés") +
+  theme(axis.title.y = element_blank(),
+        axis.text.y  = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+## Histograma
+
+```{r}
+loan50 %>%
+  plot_ly(x = ~interest_rate) %>% 
+  add_histogram()
+
+```
+
+
+## Diagrama de caja (boxplot)
+
+```{r}
+loan50 %>% plot_ly(x = ~interest_rate, hoverinfo = "x") %>%
+  add_boxplot(color = I("#111e6c")) %>%
+  layout(xaxis = list(title = "Tasa de interés"),
+         yaxis = list(title = ""),
+         margin = list(t=70))
+```
+
+
+## PArte
+
+<div class="centered">
+This text is centered.
+</div>
+
+$$\overline x = \frac{\sum_{i=n}^n x_i}{n}$$
+
+# Explorando variables categóricas

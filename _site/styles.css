@@ -1,17 +1,8 @@
 <style>
 
-div {
-  background-color: lightgrey;
-  width: 300px;
-  border: 15px blue;
-  padding: 50px;
-  margin: 20px;
-}
-
 h2 {
   font-family: Helvetica, sans-serif;
 }
-
 
 p, ul, li {
   color: gray;
@@ -19,11 +10,7 @@ p, ul, li {
   margin: 9px 0;
 }
 
-p.groove {border-style: groove;}
+.red {color: #840000;}
 
-.p1 {
-  text-indent: 1em;
-}
-
-
+.green {color: #47916C;}
 </style>

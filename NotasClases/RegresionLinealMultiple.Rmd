@@ -1,0 +1,204 @@
+---
+title: "Regresión lineal múltiple"
+author: "Víctor Macías E."
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+library(forcats)
+library(tidymodels)
+library(kableExtra)
+library(HistData)
+library(openintro)
+library(skimr)
+library(broom)
+library(janitor)
+
+```
+
+```{r echo=FALSE}
+data("loans_full_schema")
+```
+
+A continuación se crearán dos variables:
+
+- `bankruptcy` que toma el valor 1 si `public_record_bankrupt` es mayor o igual a 1 y toma el valor cero, en otro caso.
+- `credit_util` es igual al cuociente entre `total_credit_utilized` y `total_credit_limit`
+
+```{r}
+loans <- loans_full_schema %>% 
+  mutate(bankruptcy = if_else(public_record_bankrupt >= 1, 1, 0),
+         credit_util = total_credit_utilized / total_credit_limit)
+```
+
+---
+
+class: middle
+
+```{r}
+glimpse(loans$credit_check)
+```
+
+---
+
+class: middle
+
+### Caso 1: Predictor que es variable categórica con 2 niveles 
+
+El modelo a estimar es el siguiente:
+
+$$interest\_rate = \beta_0+\beta_1bankruptcy+u$$
+
+```{r}
+lm_model_1 <- linear_reg() %>% 
+            set_engine('lm') %>%
+            fit(interest_rate ~ bankruptcy, data = loans)
+```
+
+```{r}
+tidy(lm_model_1)
+```
+
+---
+
+class: middle
+
+Por lo tanto, el modelo estimado es:
+
+$$\widehat{interest\_rate}=12.33+0.74\times bankruptcy$$
+
+$\hat \beta_1=0.74$ significa que el modelo predice una tasa de interés 0.74 puntos porcentuales superior para prestatarios con al menos una bancarrota en sus registros. 
+
+---
+
+class: middle
+
+### Caso 3: Predictor que es variable categórica con 3 niveles
+
+El predictor, `verified_income`, es una variable categórica que tiene 3 niveles: `Not Verified`, `Source Verified` y `Verified`.
+
+```{r}
+loans <- loans %>% 
+  mutate(verified_income = fct_drop(verified_income, only = "")) 
+
+loans %>%
+  tabyl(verified_income) %>% adorn_totals("row") %>% 
+  adorn_pct_formatting()
+```
+
+---
+
+class: middle
+
+El resultado de la estimación se presenta en la siguiente tabla:
+
+```{r }
+lm_model_2 <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            fit(interest_rate ~ verified_income, data = loans)
+```
+
+```{r }
+tidy(lm_model_2)
+```
+
+Note que `Verified income`  
+
+---
+
+class: middle
+
+Por lo tanto, el modelo estimado es:
+
+$$\widehat{interest\_rate}=11.1+1.42\times verified\_income_{Source Verified}+\\ 3.25\times verified\_income_{Verified}$$
+
+Usando los resultados de este modelo, se tiene que la tasa de interés promedio es:
+
+- $\widehat{interest\_rate}=11.1+1.42\times 0+ 3.25\times 0=11.1\%$ para quienes ni la fuente ni el monto de sus ingresos han sido verificados.
+
+- $\widehat{interest\_rate}=11.1+1.42\times 1+ 3.25\times 0=12.52\%$ para quienes la fuente de los ingresos ha sido verificada, pero no el monto de los ingresos.
+
+- $\widehat{interest\_rate}=11.1+1.42\times 0+ 3.25\times 1=14.35$ para quienes la fuente de los ingresos no ha sido verificada, pero el monto de los ingresos sí ha sido verificado.
+
+---
+
+Cada coeficiente se interpreta como la diferencia entre la tasa de interés de una categoría determinada respecto a la categoría de referencia,`Not Verified`. 
+
+
+---
+
+class: bottom, right
+
+## Cuando un predictor es una variable categórica que tiene $k>2$ niveles, entonces el resultado presentará los $\beta 's$ para $k-1$ niveles y los restante coeficientes serán interpretados relativo a la categoría omitida que se conoce como nivel de referencia. 
+
+---
+
+class: bottom, right
+
+## In general, a categorical predictor with p different levels will be represented by $p−1$ terms in a multiple regression model.
+ 
+---
+
+class: middle
+
+```{r }
+lm_model_3 <- linear_reg() %>% 
+            set_engine('lm') %>%
+            fit(interest_rate ~ verified_income + debt_to_income + 
+                  credit_util + bankruptcy + term + issue_month, 
+                data = loans)
+
+tidy(lm_model_3)
+```
+
+
+---
+
+class: middle
+
+# Correlación entre predictores
+
+Dos variables predictores son colineales cuando están correlacionadas. 
+
+and this collinearity complicates model estimation. 
+
+Es imposible impedir la existencia de colinealidad en estudios observacionales, experiments are usually designed to prevent predictors from being collinear.
+
+---
+
+class: inverse, center, middle
+
+# Medidas de bondad del ajuste
+
+---
+
+class: middle
+
+## $R^2$ o coeficiente de determinación
+
+Mide la proporción de la variación en $y$ que es explicada por los $x's$, donde $0 \leq R^2 \leq 1$
+
+## $R^2$ ajustado
+
+
+---
+
+class: inverse, center, middle
+
+# Selección de modelos
